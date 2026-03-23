@@ -45,10 +45,12 @@ Configs are symlinked to `~/.config/`:
 |-----|--------|
 | Super + Space | App launcher (Walker) |
 | Super + Escape | Power menu |
-| Super + Ctrl + L | Lock screen |
+| Super + Shift + L | Lock screen |
 | Super + T | Terminal |
+| Super + N | Editor (LazyVim) |
 | Super + B | Browser |
 | Super + E | File manager |
+| Super + Y | Yazi file manager |
 
 ## Packages
 
@@ -57,9 +59,9 @@ Installed via `romarchy-install`:
 - **Core**: hyprland, waybar, hyprlock, hypridle, uwsm
 - **Terminal**: kitty, starship, eza, bat, fd, ripgrep
 - **Launchers**: walker, elephant, impala (wifi)
-- **Utils**: wl-clipboard, grim, slurp, mako, bluetui
+- **Utils**: wl-clipboard, grim, slurp, mako, bluetui, yazi
 - **Dev**: git, neovim, fzf, zoxide
-- **Extras**: fastfetch, fonts
+- **Extras**: fastfetch, fonts, LazyVim
 
 ## Inspired by
 
