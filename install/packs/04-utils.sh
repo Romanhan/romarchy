@@ -13,4 +13,14 @@ check_and_install "Utils" \
   pamixer \
   playerctl \
   bluetui \
-  yazi
+  yazi \
+  ffmpeg \
+  p7zip \
+  jq \
+  poppler \
+  fd \
+  ripgrep \
+  fzf \
+  zoxide \
+  resvg \
+  imagemagick
