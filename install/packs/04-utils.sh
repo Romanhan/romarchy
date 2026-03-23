@@ -12,4 +12,5 @@ check_and_install "Utils" \
   brightnessctl \
   pamixer \
   playerctl \
-  bluetui
+  bluetui \
+  yazi
