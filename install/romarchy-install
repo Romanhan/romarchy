@@ -13,6 +13,7 @@ Usage: romarchy-install [OPTIONS]
 Options:
   --list           List available packs
   --pack <name>    Install specific pack (core, terminal, launchers, utils, dev, extras)
+  --lazyvim        Setup LazyVim
   --all            Install all packs (default)
   --help           Show this help
 
@@ -123,6 +124,9 @@ else
       ;;
     --all)
       run_all
+      ;;
+    --lazyvim)
+      bash "$INSTALL_DIR/post-install/02-lazyvim.sh"
       ;;
     --help|-h)
       usage
