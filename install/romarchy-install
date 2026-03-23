@@ -1,0 +1,126 @@
+#!/bin/bash
+set -e
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+INSTALL_DIR="$ROMARCHY_DIR/install"
+
+usage() {
+  cat << EOF
+Romarchy Install Script
+
+Usage: romarchy-install [OPTIONS]
+
+Options:
+  --list           List available packs
+  --pack <name>    Install specific pack (core, terminal, launchers, utils, dev, extras)
+  --all            Install all packs (default)
+  --help           Show this help
+
+Packs:
+  core       - Hyprland, waybar, hyprlock, etc.
+  terminal   - Kitty, starship, eza, bat, etc.
+  launchers  - Walker, elephant, impala
+  utils      - Clipboard, screenshots, bluetooth, etc.
+  dev        - Git, neovim, fzf, zoxide, etc.
+  extras     - Fonts, fastfetch
+
+Examples:
+  romarchy-install              # Install all
+  romarchy-install --list       # List packs
+  romarchy-install --pack core  # Install only core
+EOF
+}
+
+list_packs() {
+  echo "Available packs:"
+  echo ""
+  for pack in "$INSTALL_DIR"/packs/*.sh; do
+    if [[ -f "$pack" ]]; then
+      local name=$(basename "$pack" .sh | sed 's/^[0-9]*-//')
+      echo "  $name"
+    fi
+  done
+}
+
+run_pack() {
+  local pack_name="$1"
+  local pack_file=""
+  
+  case "$pack_name" in
+    core)      pack_file="$INSTALL_DIR/packs/01-core.sh" ;;
+    terminal)  pack_file="$INSTALL_DIR/packs/02-terminal.sh" ;;
+    launchers) pack_file="$INSTALL_DIR/packs/03-launchers.sh" ;;
+    utils)     pack_file="$INSTALL_DIR/packs/04-utils.sh" ;;
+    dev)       pack_file="$INSTALL_DIR/packs/05-dev.sh" ;;
+    extras)    pack_file="$INSTALL_DIR/packs/06-extras.sh" ;;
+    *)
+      echo -e "\033[31mUnknown pack: $pack_name\033[0m"
+      exit 1
+      ;;
+  esac
+  
+  if [[ ! -f "$pack_file" ]]; then
+    echo -e "\033[31mPack file not found: $pack_file\033[0m"
+    exit 1
+  fi
+  
+  sync_packages
+  bash "$pack_file"
+}
+
+sync_packages() {
+  echo ""
+  echo -e "\033[1;36m═══ Syncing packages ═══\033[0m"
+  echo -n "  Running yay -Syu... "
+  if yay -Syu --noconfirm 2>&1; then
+    echo -e "\033[32m✓\033[0m"
+  else
+    echo -e "\033[33m! Sync failed, continuing anyway...\033[0m"
+  fi
+}
+
+run_all() {
+  sync_packages
+  for pack in "$INSTALL_DIR"/packs/*.sh; do
+    if [[ -f "$pack" ]]; then
+      bash "$pack" || {
+        echo ""
+        echo -e "\033[31mInstall failed. Exiting.\033[0m"
+        exit 1
+      }
+    fi
+  done
+  
+  echo ""
+  echo -e "\033[32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+  echo -e "\033[32m All packs installed successfully!\033[0m"
+  echo -e "\033[32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+}
+
+if [[ $# -eq 0 ]]; then
+  run_all
+else
+  case "$1" in
+    --list)
+      list_packs
+      ;;
+    --pack)
+      if [[ -z "$2" ]]; then
+        echo -e "\033[31mError: --pack requires an argument\033[0m"
+        exit 1
+      fi
+      run_pack "$2"
+      ;;
+    --all)
+      run_all
+      ;;
+    --help|-h)
+      usage
+      ;;
+    *)
+      echo -e "\033[31mUnknown option: $1\033[0m"
+      usage
+      exit 1
+      ;;
+  esac
+fi

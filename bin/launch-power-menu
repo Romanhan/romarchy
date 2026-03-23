@@ -1,0 +1,3 @@
+#!/bin/bash
+
+"$HOME/.local/share/romarchy/bin/romarchy-power-menu"

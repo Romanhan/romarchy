@@ -1,0 +1,13 @@
+#!/bin/bash
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+
+CHOICE=$(echo -e "⏻  Shutdown\n↻  Reboot\n⏻  Logout\n⏾  Suspend\n🔒  Lock" | walker --dmenu -p "Power" --width 295 --minheight 1 --maxheight 300)
+
+case "$CHOICE" in
+  *"Shutdown"*) "$ROMARCHY_DIR/bin/romarchy-system-shutdown" ;;
+  *"Reboot"*) "$ROMARCHY_DIR/bin/romarchy-system-reboot" ;;
+  *"Logout"*) "$ROMARCHY_DIR/bin/romarchy-system-logout" ;;
+  *"Suspend"*) "$ROMARCHY_DIR/bin/romarchy-system-suspend" ;;
+  *"Lock"*) "$ROMARCHY_DIR/bin/romarchy-lock-screen" ;;
+esac

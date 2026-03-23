@@ -1,0 +1,10 @@
+#!/bin/bash
+
+close_all_windows() {
+  hyprctl clients -j 2>/dev/null | jq -r '.[].address' 2>/dev/null | xargs -I{} hyprctl dispatch closewindow address:{} 2>/dev/null
+  hyprctl dispatch workspace 1 2>/dev/null
+}
+
+nohup bash -c "sleep 2 && loginctl terminate-session $(loginctl session-status | head -1 | awk '{print $1}')" >/dev/null 2>&1 &
+close_all_windows
+sleep 1

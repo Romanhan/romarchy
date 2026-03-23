@@ -1,0 +1,4 @@
+#!/bin/bash
+rfkill unblock wifi >/dev/null 2>&1
+nohup kitty -e impala >/dev/null 2>&1 &
+disown

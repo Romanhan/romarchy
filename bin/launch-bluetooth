@@ -1,0 +1,3 @@
+#!/bin/bash
+nohup kitty -e bluetui >/dev/null 2>&1 &
+disown

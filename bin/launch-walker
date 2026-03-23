@@ -1,0 +1,12 @@
+#!/bin/bash
+# Ensure elephant is running
+if ! pgrep -x elephant > /dev/null; then
+  nohup elephant >/dev/null 2>&1 &
+fi
+
+# Ensure walker service running
+if ! pgrep -f "walker --gapplication-service" > /dev/null; then
+  nohup walker --gapplication-service >/dev/null 2>&1 &
+fi
+
+exec walker --width 644 --maxheight 300 --minheight 300 "$@"
