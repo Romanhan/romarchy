@@ -66,6 +66,7 @@ run_pack() {
   
   sync_packages
   bash "$pack_file"
+  run_post_install
 }
 
 sync_packages() {
@@ -91,10 +92,19 @@ run_all() {
     fi
   done
   
+  run_post_install
+  
   echo ""
   echo -e "\033[32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
   echo -e "\033[32m All packs installed successfully!\033[0m"
   echo -e "\033[32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+}
+
+run_post_install() {
+  if [[ -f "$INSTALL_DIR/post-install/all.sh" ]]; then
+    echo ""
+    bash "$INSTALL_DIR/post-install/all.sh"
+  fi
 }
 
 if [[ $# -eq 0 ]]; then
