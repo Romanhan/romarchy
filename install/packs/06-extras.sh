@@ -7,4 +7,5 @@ source "$ROMARCHY_DIR/install/helpers/ui.sh"
 check_and_install "Extras" \
   noto-fonts-emoji \
   fastfetch \
-  ttf-cascadia-code-nerd
+  ttf-cascadia-code-nerd \
+  bibata-cursor-theme
