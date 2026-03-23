@@ -1,6 +1,6 @@
 force_keyboard_focus = true
 selection_wrap = true
-theme = "catppuccin"
+theme = "catppuccin-dark"
 hide_action_hints = true
 rounding = 12
 

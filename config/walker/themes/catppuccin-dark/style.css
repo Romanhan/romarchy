@@ -3,8 +3,8 @@
 }
 
 * {
-  font-family: monospace;
-  font-size: 18px;
+  font-family: 'CaskaydiaCove Nerd Font', 'CaskaydiaMono Nerd Font', monospace;
+  font-size: 16px;
   color: #cdd6f4;
 }
 
@@ -21,10 +21,10 @@ scrollbar {
 }
 
 .box-wrapper {
-  background: rgba(30, 30, 46, 0.95);
+  background: rgba(0, 0, 0, 1);
   padding: 20px;
   border: 2px solid #89b4fa;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .preview-box {
@@ -34,7 +34,7 @@ scrollbar {
 }
 
 .search-container {
-  background: #1e1e2e;
+  background: #000000;
   padding: 10px;
 }
 
@@ -71,10 +71,13 @@ child:hover .item-box {
 }
 
 child:selected .item-box {
+  background: #313244;
+  border-radius: 8px;
 }
 
 child:selected .item-box * {
   color: #cba6f7;
+  font-weight: bold;
 }
 
 .item-box {
@@ -106,7 +109,7 @@ child:selected .item-box * {
 }
 
 .keybind-hints {
-  background: #181825;
+  background: #000000;
   padding: 10px;
   margin-top: 10px;
 }
