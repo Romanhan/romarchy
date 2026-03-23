@@ -1,0 +1,9 @@
+# Romarchy bash configuration
+# Sources all bash config files
+
+ROMARCHY_BASH="$HOME/.local/share/romarchy/default/bash"
+
+source "$ROMARCHY_BASH/envs"
+source "$ROMARCHY_BASH/shell"
+source "$ROMARCHY_BASH/aliases"
+source "$ROMARCHY_BASH/init"

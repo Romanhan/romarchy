@@ -1,0 +1,8 @@
+# Environment variables
+
+export EDITOR=nvim
+export VISUAL=nvim
+
+export BAT_THEME=ansi
+
+export PATH="$HOME/.local/share/romarchy/bin:$PATH"

@@ -34,14 +34,16 @@ setup_symlinks() {
   
   echo ""
   echo "Setting up bashrc:"
-  echo -n "  Romarchy PATH... "
-  if grep -q "romarchy/bin" "$HOME/.bashrc" 2>/dev/null; then
+  echo -n "  Romarchy bash config... "
+  if grep -q "romarchy/default/bash/rc" "$HOME/.bashrc" 2>/dev/null; then
     echo -e "\033[33m~\033[0m (already set)"
   else
-    cat >> "$HOME/.bashrc" << 'BASHRC'
+    cat > "$HOME/.bashrc" << 'BASHRC'
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
 
-# Romarchy
-export PATH="$HOME/.local/share/romarchy/bin:\$PATH"
+# Romarchy bash configuration
+source ~/.local/share/romarchy/default/bash/rc
 BASHRC
     echo -e "\033[32m✓\033[0m"
   fi

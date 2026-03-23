@@ -1,0 +1,15 @@
+# Shell settings
+
+# History
+shopt -s histappend
+HISTSIZE=10000
+HISTFILESIZE=$HISTSIZE
+HISTCONTROL=ignoreboth
+
+# Bash completion
+if [[ -f /usr/share/bash-completion/bash_completion ]]; then
+    source /usr/share/bash-completion/bash_completion
+fi
+
+# Disable command hashing for better tool detection
+set +h
