@@ -11,4 +11,5 @@ check_and_install "Core" \
   hypridle \
   hyprpicker \
   hyprsunset \
-  uwsm
+  uwsm \
+  brave-bin
