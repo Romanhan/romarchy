@@ -6,8 +6,9 @@ Personal dotfiles for Arch Linux with Hyprland.
 
 ```
 romarchy/
-├── bin/           # Scripts (launchers, power menu, etc.)
+├── bin/           # Scripts (launchers, power menu, theme scripts)
 ├── config/        # App configs (hypr, waybar, kitty, etc.)
+├── fonts/        # Font packages
 ├── install/       # Install scripts for packages
 ├── scripts/       # Helper scripts
 └── themes/        # Theme files
@@ -38,6 +39,44 @@ Configs are symlinked to `~/.config/`:
 ~/.config/wofi      -> ~/.local/share/romarchy/config/wofi
 ~/.config/elephant  -> ~/.local/share/romarchy/config/elephant
 ```
+
+## Theming
+
+### Theme Commands
+
+```bash
+romarchy-theme-list        # List available themes
+romarchy-theme-current     # Show current theme
+romarchy-theme-set <name>  # Switch theme
+```
+
+### Available Themes
+
+- **catppuccin-mocha-black** - Catppuccin Mocha with pure black background
+
+### Theme Structure
+
+Each theme contains:
+- `hyprland.conf` - Border colors
+- `kitty.conf` - Terminal colors
+- `waybar.css` - Waybar styling
+- `walker/` - Walker theme files
+- `nvim.lua` - Neovim/LazyVim colorscheme
+- `colors.toml` - Shared color variables
+
+## Fonts
+
+### Font Commands
+
+```bash
+romarchy-font-list        # List available fonts
+romarchy-font-current     # Show current font
+romarchy-font-set <name> # Switch font
+```
+
+### Available Fonts
+
+- **cascadia-code** - Caskaydia Nerd Font (Mono for terminal, Propo for waybar)
 
 ## Keybindings
 

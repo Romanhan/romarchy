@@ -1,0 +1,55 @@
+#!/bin/bash
+
+set -e
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+FONTS_DIR="$ROMARCHY_DIR/fonts"
+
+if [[ -z "$1" ]]; then
+    echo "Usage: romarchy-font-set <font-name>"
+    echo ""
+    echo "Available fonts:"
+    for font_dir in "$FONTS_DIR"/*; do
+        if [[ -d "$font_dir" ]]; then
+            basename "$font_dir"
+        fi
+    done
+    exit 1
+fi
+
+FONT_NAME="$1"
+FONT_PATH="$FONTS_DIR/$FONT_NAME"
+
+if [[ ! -d "$FONT_PATH" ]]; then
+    echo "Font '$FONT_NAME' does not exist"
+    exit 1
+fi
+
+echo "Setting font to: $FONT_NAME"
+
+echo "$FONT_NAME" > "$ROMARCHY_DIR/.current-font"
+
+apply_font() {
+    local font_path="$1"
+    local font_name=$(basename "$font_path")
+
+    if [[ -f "$font_path/kitty.conf" ]]; then
+        cat "$font_path/kitty.conf" > "$ROMARCHY_DIR/config/kitty/font.conf"
+    fi
+
+    if [[ -f "$font_path/hyprland.conf" ]]; then
+        cat "$font_path/hyprland.conf" > "$ROMARCHY_DIR/config/hypr/font.conf"
+    fi
+
+    if [[ -f "$font_path/waybar.css" ]]; then
+        cat "$font_path/waybar.css" > "$ROMARCHY_DIR/config/waybar/font.css"
+    fi
+}
+
+apply_font "$FONT_PATH"
+
+hyprctl reload 2>/dev/null || true
+killall -SIGUSR2 waybar 2>/dev/null || true
+killall -SIGUSR2 kitty 2>/dev/null || true
+
+echo "Font '$FONT_NAME' applied!"

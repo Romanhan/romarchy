@@ -1,0 +1,25 @@
+#!/bin/bash
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+THEMES_DIR="$ROMARCHY_DIR/themes"
+
+if [[ ! -d "$THEMES_DIR" ]]; then
+    echo "No themes directory found"
+    exit 1
+fi
+
+CURRENT_THEME=$(readlink -f "$ROMARCHY_DIR/config/hypr/looknfeel.conf" 2>/dev/null | sed "s|$ROMARCHY_DIR/themes/||" | sed 's|/hyprland.conf||')
+
+echo "Available themes:"
+echo ""
+
+for theme_dir in "$THEMES_DIR"/*; do
+    if [[ -d "$theme_dir" ]]; then
+        theme_name=$(basename "$theme_dir")
+        if [[ "$theme_name" == "$CURRENT_THEME" ]]; then
+            echo "  * $theme_name (current)"
+        else
+            echo "    $theme_name"
+        fi
+    fi
+done

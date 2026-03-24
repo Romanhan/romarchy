@@ -1,0 +1,80 @@
+#!/bin/bash
+
+set -e
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+THEMES_DIR="$ROMARCHY_DIR/themes"
+
+if [[ -z "$1" ]]; then
+    echo "Usage: romarchy-theme-set <theme-name>"
+    echo ""
+    echo "Available themes:"
+    for theme_dir in "$THEMES_DIR"/*; do
+        if [[ -d "$theme_dir" ]]; then
+            basename "$theme_dir"
+        fi
+    done
+    exit 1
+fi
+
+THEME_NAME="$1"
+THEME_PATH="$THEMES_DIR/$THEME_NAME"
+
+if [[ ! -d "$THEME_PATH" ]]; then
+    echo "Theme '$THEME_NAME' does not exist"
+    exit 1
+fi
+
+echo "Setting theme to: $THEME_NAME"
+
+echo "$THEME_NAME" > "$ROMARCHY_DIR/.current-theme"
+
+apply_theme() {
+    local theme_path="$1"
+    local theme_name=$(basename "$theme_path")
+
+    if [[ -f "$theme_path/hyprland.conf" ]]; then
+        rm -f "$ROMARCHY_DIR/config/hypr/theme.conf"
+        ln -sf "$theme_path/hyprland.conf" "$ROMARCHY_DIR/config/hypr/theme.conf"
+    fi
+
+    if [[ -f "$theme_path/kitty.conf" ]]; then
+        rm -f "$ROMARCHY_DIR/config/kitty/theme.conf"
+        ln -sf "$theme_path/kitty.conf" "$ROMARCHY_DIR/config/kitty/theme.conf"
+    fi
+
+    if [[ -f "$theme_path/waybar.css" ]]; then
+        cp "$theme_path/waybar.css" "$ROMARCHY_DIR/config/waybar/style.css"
+    fi
+
+    if [[ -d "$theme_path/walker" ]]; then
+        local walker_theme_dir="$ROMARCHY_DIR/config/walker/themes/current"
+        mkdir -p "$walker_theme_dir"
+        rm -f "$walker_theme_dir"/*
+        cp "$theme_path/walker/"* "$walker_theme_dir/" 2>/dev/null || true
+    fi
+
+    if [[ -f "$theme_path/nvim.lua" ]]; then
+        mkdir -p "$HOME/.config/nvim/lua/plugins"
+        rm -f "$HOME/.config/nvim/lua/plugins/theme.lua"
+        ln -sf "$theme_path/nvim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
+    fi
+
+    if [[ -f "$theme_path/vscode.json" ]]; then
+        mkdir -p "$ROMARCHY_DIR/.local/share/romarchy/themes/current"
+        rm -f "$ROMARCHY_DIR/.local/share/romarchy/themes/current/vscode.json"
+        ln -sf "$theme_path/vscode.json" "$ROMARCHY_DIR/.local/share/romarchy/themes/current/vscode.json" 2>/dev/null || cp "$theme_path/vscode.json" "$ROMARCHY_DIR/.vscode-theme.json" 2>/dev/null || true
+    fi
+}
+
+apply_theme "$THEME_PATH"
+
+hyprctl reload 2>/dev/null || true
+killall -SIGUSR2 waybar 2>/dev/null || true
+killall -SIGUSR2 walker 2>/dev/null || true
+
+if command -v makoctl &> /dev/null; then
+    makoctl reload 2>/dev/null || true
+fi
+
+echo "Theme '$THEME_NAME' applied!"

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+THEMES_DIR="$ROMARCHY_DIR/themes"
+
+current_theme_file="$ROMARCHY_DIR/.current-theme"
+
+if [[ -f "$current_theme_file" ]]; then
+    cat "$current_theme_file"
+else
+    echo "catppuccin-mocha-black"
+fi

@@ -50,9 +50,7 @@
   },
   "custom/omarchy": {
     "format": "<span font='omarchy'>\udb82\udcc7</span>",
-    "on-click": "omarchy-menu",
-    "on-click-right": "xdg-terminal-exec",
-    "tooltip-format": "Omarchy Menu\n\nSuper + Alt + Space"
+    "tooltip": false
   },
  "custom/updates": {
     "format": "{}",

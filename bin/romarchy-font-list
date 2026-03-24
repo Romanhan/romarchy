@@ -1,0 +1,25 @@
+#!/bin/bash
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+FONTS_DIR="$ROMARCHY_DIR/fonts"
+
+if [[ ! -d "$FONTS_DIR" ]]; then
+    echo "No fonts directory found"
+    exit 1
+fi
+
+CURRENT_FONT=$(cat "$ROMARCHY_DIR/.current-font" 2>/dev/null || echo "cascadia-code")
+
+echo "Available fonts:"
+echo ""
+
+for font_dir in "$FONTS_DIR"/*; do
+    if [[ -d "$font_dir" ]]; then
+        font_name=$(basename "$font_dir")
+        if [[ "$font_name" == "$CURRENT_FONT" ]]; then
+            echo "  * $font_name (current)"
+        else
+            echo "    $font_name"
+        fi
+    fi
+done

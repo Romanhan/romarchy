@@ -1,7 +1,5 @@
 /* Catppuccin Mocha Black - Waybar Theme */
 
-@import 'font.css';
-
 * {
   background-color: #000000;
   color: #cdd6f4;
@@ -9,7 +7,8 @@
   border: none;
   border-radius: 0;
   min-height: 0;
-  font-size: 16px;
+  font-family: 'CaskaydiaCove Nerd Font', 'CaskaydiaMono Nerd Font';
+  font-size: 14px;
 }
 
 .modules-left {
@@ -38,16 +37,11 @@
 #network,
 #bluetooth,
 #pulseaudio,
-#custom-omarchy,
+#custom-romarchy,
 #custom-update,
 #custom-updates {
   min-width: 12px;
   margin: 0 7.5px;
-}
-
-#custom-omarchy {
-  margin-right: 10px;
-  font-size: 16px;
 }
 
 #custom-expand-icon {

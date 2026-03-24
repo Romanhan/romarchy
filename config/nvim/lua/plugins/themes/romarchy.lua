@@ -1,0 +1,1 @@
+../../../../../../themes/catppuccin-mocha-black/nvim.lua
