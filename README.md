@@ -36,7 +36,6 @@ Configs are symlinked to `~/.config/`:
 ~/.config/waybar    -> ~/.local/share/romarchy/config/waybar
 ~/.config/kitty     -> ~/.local/share/romarchy/config/kitty
 ~/.config/walker    -> ~/.local/share/romarchy/config/walker
-~/.config/wofi      -> ~/.local/share/romarchy/config/wofi
 ~/.config/elephant  -> ~/.local/share/romarchy/config/elephant
 ```
 

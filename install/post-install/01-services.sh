@@ -8,7 +8,7 @@ echo -e "\033[1;36m═══ Essential Services Setup ═══\033[0m"
 setup_symlinks() {
   echo ""
   echo "Creating symlinks:"
-  local configs=("hypr" "waybar" "kitty" "walker" "wofi" "elephant")
+  local configs=("hypr" "waybar" "kitty" "walker" "elephant")
   
   for config in "${configs[@]}"; do
     local source="$ROMARCHY_DIR/config/$config"
