@@ -77,6 +77,36 @@ romarchy-font-set <name> # Switch font
 
 - **cascadia-code** - Caskaydia Nerd Font (Mono for terminal, Propo for waybar)
 
+## Backgrounds (Wallpapers)
+
+### Background System
+Like omarchy, romarchy uses a symlink-based background system:
+- Desktop wallpaper: managed by swaybg
+- Lock screen wallpaper: managed by hyprlock
+- Both read from the same symlink path
+
+### Background Structure
+```
+~/.config/romarchy/
+├── backgrounds/
+│   └── <theme-name>/      # Theme-specific backgrounds
+│       └── (image files)
+└── current/
+    └── background -> symlink to current image
+```
+
+### Background Commands
+```bash
+romarchy-bg-next       # Cycle to next background
+romarchy-bg-set <path> # Set specific background image
+romarchy-bg-install    # Open backgrounds folder to add images
+```
+
+### Lock Screen
+- Lock screen shows wallpaper via hyprlock
+- Loading indicator: border changes to accent color (mauve) while verifying password
+- Wrong password: border turns red
+
 ## Keybindings
 
 | Key | Action |
