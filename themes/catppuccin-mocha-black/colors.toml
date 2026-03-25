@@ -34,3 +34,7 @@ lavender = "#b4befe"
 # Border colors
 active_border = "#cba6f7"
 inactive_border = "#45475a"
+
+# Hyprlock colors
+check_color = "#cba6f7"    # accent - loading state when verifying password
+fail_color = "#f38ba8"     # red - wrong password

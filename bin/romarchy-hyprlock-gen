@@ -1,0 +1,57 @@
+#!/bin/bash
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+THEME_DIR="$ROMARCHY_DIR/themes"
+
+hex_to_rgb() {
+    local hex="$1"
+    hex="${hex//#/}"
+    local r=$(printf "%d" 0x${hex:0:2})
+    local g=$(printf "%d" 0x${hex:2:2})
+    local b=$(printf "%d" 0x${hex:4:2})
+    echo "$r, $g, $b"
+}
+
+generate_theme_hyprlock() {
+    local theme_name="${1:-$(cat "$ROMARCHY_DIR/.current-theme")}"
+    local theme_path="$THEME_DIR/$theme_name"
+
+    if [[ ! -d "$theme_path" ]]; then
+        echo "Error: Theme '$theme_name' not found" >&2
+        return 1
+    fi
+
+    local colors_file="$theme_path/colors.toml"
+    if [[ ! -f "$colors_file" ]]; then
+        echo "Error: colors.toml not found in theme" >&2
+        return 1
+    fi
+
+    source <(sed -E 's/^([a-zA-Z_]+) = "([^"]+)".*$/\1="\2"/' "$colors_file" | grep -E '^(background|foreground|check_color|fail_color)=')
+
+    local background_rgb
+    local background_rgb_alpha
+    local foreground_rgb
+    local check_color_rgb
+    local fail_color_rgb
+
+    background_rgb=$(hex_to_rgb "$background")
+    background_rgb_alpha=$(hex_to_rgb "$background")
+    foreground_rgb=$(hex_to_rgb "$foreground")
+    check_color_rgb=$(hex_to_rgb "$check_color")
+    fail_color_rgb=$(hex_to_rgb "$fail_color")
+
+    local template="$ROMARCHY_DIR/default/themed/hyprlock.conf.tpl"
+    local output="$theme_path/hyprlock.conf"
+
+    sed -e "s/{{ background_rgb }}/$background_rgb/g" \
+        -e "s/{{ background_rgb_alpha }}/$background_rgb_alpha/g" \
+        -e "s/{{ foreground_rgb }}/$foreground_rgb/g" \
+        -e "s/{{ check_color_rgb }}/$check_color_rgb/g" \
+        -e "s/{{ fail_color_rgb }}/$fail_color_rgb/g" \
+        "$template" > "$output"
+
+    echo "Generated: $output"
+}
+
+generate_theme_hyprlock "$1"
