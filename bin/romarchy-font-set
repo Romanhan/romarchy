@@ -5,51 +5,135 @@ set -e
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 FONTS_DIR="$ROMARCHY_DIR/fonts"
 
-if [[ -z "$1" ]]; then
+show_usage() {
     echo "Usage: romarchy-font-set <font-name>"
     echo ""
-    echo "Available fonts:"
+    echo "Available font packs:"
     for font_dir in "$FONTS_DIR"/*; do
         if [[ -d "$font_dir" ]]; then
             basename "$font_dir"
         fi
     done
+    echo ""
+    echo "Or use a system font name from: fc-list"
+}
+
+if [[ -z "$1" ]]; then
+    show_usage
     exit 1
 fi
 
 FONT_NAME="$1"
-FONT_PATH="$FONTS_DIR/$FONT_NAME"
 
-if [[ ! -d "$FONT_PATH" ]]; then
-    echo "Font '$FONT_NAME' does not exist"
-    exit 1
-fi
+is_font_pack() {
+    [[ -d "$FONTS_DIR/$FONT_NAME" ]]
+}
 
-echo "Setting font to: $FONT_NAME"
-
-echo "$FONT_NAME" > "$ROMARCHY_DIR/.current-font"
-
-apply_font() {
-    local font_path="$1"
-    local font_name=$(basename "$font_path")
-
+apply_font_pack() {
+    local font_path="$FONTS_DIR/$FONT_NAME"
+    
+    echo "Applying font pack: $FONT_NAME"
+    
     if [[ -f "$font_path/kitty.conf" ]]; then
         cat "$font_path/kitty.conf" > "$ROMARCHY_DIR/config/kitty/font.conf"
     fi
-
+    
     if [[ -f "$font_path/hyprland.conf" ]]; then
         cat "$font_path/hyprland.conf" > "$ROMARCHY_DIR/config/hypr/font.conf"
     fi
-
+    
     if [[ -f "$font_path/waybar.css" ]]; then
         cat "$font_path/waybar.css" > "$ROMARCHY_DIR/config/waybar/font.css"
     fi
+    
+    if [[ -f "$font_path/gsettings.sh" ]]; then
+        bash "$font_path/gsettings.sh"
+    fi
+    
+    echo "$FONT_NAME" > "$ROMARCHY_DIR/.current-font"
 }
 
-apply_font "$FONT_PATH"
+generate_kitty_conf() {
+    local font_name="$1"
+    cat > "$ROMARCHY_DIR/config/kitty/font.conf" << EOF
+# System font: $font_name
+font_family     family="$font_name"
+bold_font       auto
+font_size       13
+EOF
+}
 
-hyprctl reload 2>/dev/null || true
-killall -SIGUSR2 waybar 2>/dev/null || true
-killall -SIGUSR2 kitty 2>/dev/null || true
+generate_hyprland_conf() {
+    local font_name="$1"
+    cat > "$ROMARCHY_DIR/config/hypr/font.conf" << EOF
+# System font: $font_name
+font = $font_name, 13
+EOF
+}
+
+generate_waybar_css() {
+    local font_name="$1"
+    cat > "$ROMARCHY_DIR/config/waybar/font.css" << EOF
+/* System font: $font_name */
+* {
+  font-family: '$font_name', monospace;
+}
+EOF
+}
+
+apply_gsettings() {
+    local font_name="$1"
+    
+    if command -v gsettings &>/dev/null; then
+        gsettings set org.gnome.desktop.interface font-name "$font_name" 2>/dev/null || true
+        gsettings set org.gnome.desktop.interface monospace-font-name "$font_name" 2>/dev/null || true
+    fi
+    
+    if command -v xsettingsd &>/dev/null; then
+        pkill xsettingsd 2>/dev/null || true
+        nohup xsettingsd >/dev/null 2>&1 &
+    fi
+}
+
+apply_system_font() {
+    local font_name="$1"
+    
+    echo "Applying system font: $font_name"
+    
+    generate_kitty_conf "$font_name"
+    generate_hyprland_conf "$font_name"
+    generate_waybar_css "$font_name"
+    apply_gsettings "$font_name"
+    
+    fc-cache -fv "$HOME/.local/share/fonts" 2>/dev/null || true
+    
+    echo "$font_name" > "$ROMARCHY_DIR/.current-font"
+}
+
+reload_apps() {
+    hyprctl reload 2>/dev/null || true
+    
+    pkill -x waybar 2>/dev/null || true
+    nohup waybar >/dev/null 2>&1 &
+    
+    pkill -USR1 kitty 2>/dev/null || true
+    
+    pkill -USR1 walker 2>/dev/null || true
+}
+
+if is_font_pack; then
+    apply_font_pack
+else
+    if fc-list "$FONT_NAME" | head -1 | grep -q "$FONT_NAME"; then
+        apply_system_font "$FONT_NAME"
+    else
+        echo "Font '$FONT_NAME' not found in font packs or system fonts"
+        echo ""
+        echo "Install it first or check available fonts with: fc-list"
+        exit 1
+    fi
+fi
+
+reload_apps
 
 echo "Font '$FONT_NAME' applied!"

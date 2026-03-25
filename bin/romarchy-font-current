@@ -2,8 +2,4 @@
 
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 
-if [[ -f "$ROMARCHY_DIR/.current-font" ]]; then
-    cat "$ROMARCHY_DIR/.current-font"
-else
-    echo "cascadia-code"
-fi
+cat "$ROMARCHY_DIR/.current-font" 2>/dev/null || echo "JetBrains Mono"

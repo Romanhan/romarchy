@@ -1,0 +1,181 @@
+#!/bin/bash
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+
+start_walker_service() {
+    if ! pgrep -f "walker --gapplication-service" > /dev/null 2>&1; then
+        nohup walker --gapplication-service > /dev/null 2>&1 &
+        sleep 0.3
+    fi
+}
+
+menu() {
+    local prompt="$1"
+    local options="$2"
+    local width="${3:-295}"
+    
+    echo -e "$options" | walker --dmenu -p "$prompt" --width "$width" --minheight 1 --maxheight 300 2>/dev/null
+}
+
+main_menu() {
+    echo -e "📁  Apps
+📶  System
+🎨  Style
+📦  Update
+⏻  Power Menu"
+}
+
+power_menu() {
+    echo -e "⏻  Shutdown
+↻  Reboot
+⏾  Suspend
+🔒  Lock
+↩  Back"
+}
+
+apps_menu() {
+    echo -e "📝  Terminal
+📁  File Manager
+🌐  Browser
+✏️  Editor
+📊  VS Code
+↩  Back"
+}
+
+system_menu() {
+    echo -e "📶  Wifi
+🔵  Bluetooth
+🖥️  Monitors
+⌨️  Keyboard
+↩  Back"
+}
+
+style_menu() {
+    echo -e "🎨  Themes
+🔤  Fonts
+↩  Back"
+}
+
+show_font_menu() {
+    local font_list=$("$ROMARCHY_DIR/bin/romarchy-font-list")
+    local current=$("$ROMARCHY_DIR/bin/romarchy-font-current")
+    
+    local choice=$(menu "Font" "$font_list" "350")
+    
+    if [[ -z "$choice" || "$choice" == "CNCLD" ]]; then
+        return 1
+    fi
+    
+    "$ROMARCHY_DIR/bin/romarchy-font-set" "$choice"
+}
+
+show_menu() {
+    local menu_type="$1"
+    local prompt="$2"
+    
+    case "$menu_type" in
+        main) main_menu ;;
+        power) power_menu ;;
+        apps) apps_menu ;;
+        system) system_menu ;;
+        style) style_menu ;;
+    esac | walker --dmenu -p "$prompt" --width 295 --minheight 1 --maxheight 300 2>/dev/null
+}
+
+run_action() {
+    local choice="$1"
+    
+    case "$choice" in
+        *"Shutdown")
+            "$ROMARCHY_DIR/bin/romarchy-system-shutdown"
+            ;;
+        *"Reboot")
+            "$ROMARCHY_DIR/bin/romarchy-system-reboot"
+            ;;
+        *"Suspend")
+            "$ROMARCHY_DIR/bin/romarchy-system-suspend"
+            ;;
+        *"Lock")
+            "$ROMARCHY_DIR/bin/romarchy-lock-screen"
+            ;;
+        *"Terminal")
+            "$ROMARCHY_DIR/bin/launch-terminal"
+            ;;
+        *"File Manager")
+            "$ROMARCHY_DIR/bin/launch-yazi"
+            ;;
+        *"Browser")
+            "$ROMARCHY_DIR/bin/launch-browser"
+            ;;
+        *"Editor")
+            "$ROMARCHY_DIR/bin/launch-editor"
+            ;;
+        *"VS Code")
+            uwsm app -- code
+            ;;
+        *"Wifi")
+            "$ROMARCHY_DIR/bin/launch-wifi"
+            ;;
+        *"Bluetooth")
+            "$ROMARCHY_DIR/bin/launch-bluetooth"
+            ;;
+        *"Monitors")
+            hyprctl dispatch exec "kitty -e nvim ~/.local/share/romarchy/config/hypr/monitors.conf"
+            ;;
+        *"Keyboard")
+            hyprctl dispatch exec "kitty -e nvim ~/.local/share/romarchy/config/hypr/input.conf"
+            ;;
+        *"Themes")
+            "$ROMARCHY_DIR/bin/romarchy-theme-current"
+            ;;
+        *"Fonts")
+            show_font_menu
+            ;;
+        *"Update")
+            kitty --title "Romarchy Update" -e sh -c "cd $ROMARCHY_DIR && git pull && echo 'Done. Press Enter to exit.' && read"
+            ;;
+    esac
+}
+
+navigate() {
+    local current="main"
+    
+    start_walker_service
+    
+    while true; do
+        local choice=$(show_menu "$current" "Menu")
+        
+        if [[ -z "$choice" ]]; then
+            if [[ "$current" != "main" ]]; then
+                current="main"
+                continue
+            else
+                exit 0
+            fi
+        fi
+        
+        case "$choice" in
+            *Apps)
+                current="apps"
+                ;;
+            *System)
+                current="system"
+                ;;
+            *Style)
+                current="style"
+                ;;
+            *Power\ Menu)
+                current="power"
+                ;;
+            *Back)
+                current="main"
+                ;;
+            *)
+                run_action "$choice"
+                exit 0
+                ;;
+        esac
+    done
+}
+
+navigate
