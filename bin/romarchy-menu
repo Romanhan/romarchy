@@ -18,42 +18,38 @@ menu() {
 }
 
 main_menu() {
-    echo -e "📁  Apps
-📶  System
-🎨  Style
-📦  Update
-⏻  Power Menu"
+    echo -e "󰀻  Apps
+󱐋  System
+  Style
+󰣇  Update
+󰐥  Power Menu"
 }
 
 power_menu() {
-    echo -e "⏻  Shutdown
-↻  Reboot
+    echo -e "󰐥  Shutdown
+󰜉  Reboot
 ⏾  Suspend
-🔒  Lock
-↩  Back"
+󰌾  Lock"
 }
 
 apps_menu() {
-    echo -e "📝  Terminal
-📁  File Manager
-🌐  Browser
-✏️  Editor
-📊  VS Code
-↩  Back"
+    echo -e "  Terminal
+  File Manager
+󰊯  Browser
+  Editor
+󰨞  VS Code"
 }
 
 system_menu() {
-    echo -e "📶  Wifi
-🔵  Bluetooth
-🖥️  Monitors
-⌨️  Keyboard
-↩  Back"
+    echo -e "  Wifi
+󰂯  Bluetooth
+󰍹  Monitors
+  Keyboard"
 }
 
 style_menu() {
-    echo -e "🎨  Themes
-🔤  Fonts
-↩  Back"
+    echo -e "󰸌  Themes
+  Fonts"
 }
 
 show_font_menu() {

@@ -1,0 +1,8 @@
+# Changes require a restart to take effect.
+
+# Ensure Romarchy bins are in the path
+export ROMARCHY_PATH=$HOME/.local/share/romarchy
+export PATH=$ROMARCHY_PATH/bin:$PATH:$HOME/.local/bin
+
+# Set default terminal and editor
+source ~/.config/uwsm/default

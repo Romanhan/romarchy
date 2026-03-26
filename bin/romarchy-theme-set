@@ -65,6 +65,11 @@ apply_theme() {
         rm -f "$ROMARCHY_DIR/.local/share/romarchy/themes/current/vscode.json"
         ln -sf "$theme_path/vscode.json" "$ROMARCHY_DIR/.local/share/romarchy/themes/current/vscode.json" 2>/dev/null || cp "$theme_path/vscode.json" "$ROMARCHY_DIR/.vscode-theme.json" 2>/dev/null || true
     fi
+
+    # TODO: Enable hyprlock theme generation once fully tested
+    # if [[ -x "$ROMARCHY_DIR/bin/romarchy-hyprlock-gen" ]]; then
+    #     "$ROMARCHY_DIR/bin/romarchy-hyprlock-gen" "$theme_name" 2>/dev/null || true
+    # fi
 }
 
 apply_theme "$THEME_PATH"
