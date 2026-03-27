@@ -8,7 +8,8 @@ check_and_install "Launchers" \
   walker-bin \
   elephant \
   elephant-menus \
-  impala
+  impala \
+  localsend-bin
 
 link_elephant_providers() {
   echo ""

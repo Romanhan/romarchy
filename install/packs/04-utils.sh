@@ -23,4 +23,5 @@ check_and_install "Utils" \
   fzf \
   zoxide \
   resvg \
-  imagemagick
+  imagemagick \
+  trash-cli

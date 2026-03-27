@@ -12,4 +12,11 @@ check_and_install "Core" \
   hyprpicker \
   hyprsunset \
   uwsm \
-  brave-bin
+  brave-bin \
+  swaybg \
+  nautilus \
+  visual-studio-code-bin \
+  pipewire \
+  pipewire-alsa \
+  pipewire-pulse \
+  wireplumber
