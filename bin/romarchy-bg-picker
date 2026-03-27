@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Launch the background selector menu via Walker
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+
+# Check if elephant is running
+if ! pgrep -x elephant > /dev/null; then
+  notify-send "Elephant service not running" -t 2000
+  exit 1
+fi
+
+# Launch walker with the background selector menu
+"$ROMARCHY_DIR/bin/romarchy-launch-walker" -m menus:omarchyBackgroundSelector --width 800 --minheight 400

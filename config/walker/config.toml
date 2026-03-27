@@ -18,7 +18,16 @@ max_results = 256
 default = [
   "desktopapplications",
   "websearch",
+  "menus",
 ]
+
+[[providers.prefixes]]
+prefix = "/"
+provider = "providerlist"
+
+[[providers.prefixes]]
+prefix = "bg"
+provider = "menus:omarchyBackgroundSelector"
 
 [[providers.prefixes]]
 prefix = "/"
