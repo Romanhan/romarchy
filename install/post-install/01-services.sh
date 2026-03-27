@@ -8,7 +8,7 @@ echo -e "\033[1;36m═══ Essential Services Setup ═══\033[0m"
 setup_symlinks() {
   echo ""
   echo "Creating symlinks:"
-  local configs=("hypr" "waybar" "kitty" "walker" "elephant")
+  local configs=("hypr" "waybar" "kitty" "walker" "elephant" "uwsm")
   
   for config in "${configs[@]}"; do
     local source="$ROMARCHY_DIR/config/$config"
@@ -100,7 +100,13 @@ echo -n "  Elephant (walker backend)... "
 if pgrep -x elephant > /dev/null; then
   echo -e "\033[32m✓\033[0m (running)"
 else
-  echo -e "\033[33m!\033[0m (not running, start with: launch-walker)"
+  systemctl --user start elephant.service 2>/dev/null || setsid uwsm-app -- elephant &>/dev/null &
+  sleep 1
+  if pgrep -x elephant > /dev/null; then
+    echo -e "\033[32m✓\033[0m (started)"
+  else
+    echo -e "\033[33m!\033[0m (failed to start)"
+  fi
 fi
 
 echo ""

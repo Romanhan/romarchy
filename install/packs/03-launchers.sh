@@ -7,6 +7,7 @@ source "$ROMARCHY_DIR/install/helpers/ui.sh"
 check_and_install "Launchers" \
   walker-bin \
   elephant \
+  elephant-menus \
   impala
 
 link_elephant_providers() {

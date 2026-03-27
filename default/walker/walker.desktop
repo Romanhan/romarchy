@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Walker
+Comment=Application Launcher
+Exec=walker --gapplication-service
+Icon=walker
+Terminal=false
+Categories=Utility;
+X-KDE-autostart-after=panel

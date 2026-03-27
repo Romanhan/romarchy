@@ -1,0 +1,18 @@
+#!/bin/bash
+# Restart walker services after updates
+
+pkill -x walker 2>/dev/null
+pkill -x elephant 2>/dev/null
+
+sleep 1
+
+# Restart via uwsm if available
+if command -v uwsm-app &>/dev/null; then
+  setsid uwsm-app -- elephant &>/dev/null &
+  setsid uwsm-app -- walker --gapplication-service &>/dev/null &
+else
+  setsid elephant &>/dev/null &
+  setsid walker --gapplication-service &>/dev/null &
+fi
+
+echo "Walker services restarted."
