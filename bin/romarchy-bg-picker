@@ -4,10 +4,10 @@
 
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 
-# Check if elephant is running
+# Ensure elephant is running
 if ! pgrep -x elephant > /dev/null; then
-  notify-send "Elephant service not running" -t 2000
-  exit 1
+  systemctl --user start elephant.service
+  sleep 1
 fi
 
 # Launch walker with the background selector menu
