@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -e
+
+COMMAND="$1"
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+
+if [[ -z $COMMAND ]]; then
+  echo "Usage: romarchy-snapshot {create|list|restore}" >&2
+  exit 1
+fi
+
+if ! command -v snapper &>/dev/null; then
+  exit 127 # romarchy-install can use this to just ignore if snapper is not available
+fi
+
+case "$COMMAND" in
+create)
+  DESC="${2:-manual snapshot}"
+
+  echo -e "\e[32mCreate system snapshot\e[0m"
+
+  # Get existing snapper config names from CSV output (like Omarchy)
+  mapfile -t CONFIGS < <(sudo snapper --csvout list-configs | awk -F, 'NR>1 {print $1}')
+
+  for config in "${CONFIGS[@]}"; do
+    sudo snapper -c "$config" create -c number -d "$DESC"
+  done
+  echo
+  ;;
+list)
+  snapper -c root list
+  ;;
+restore)
+  sudo limine-snapper-restore
+  ;;
+*)
+  echo "Usage: romarchy-snapshot {create|list|restore} [description]" >&2
+  ;;
+esac

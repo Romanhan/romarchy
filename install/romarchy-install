@@ -102,6 +102,13 @@ run_all() {
 }
 
 run_post_install() {
+  # Run login scripts first (limine-snapper, etc.)
+  if [[ -f "$ROMARCHY_DIR/install/login/all.sh" ]]; then
+    echo ""
+    bash "$ROMARCHY_DIR/install/login/all.sh"
+  fi
+  
+  # Then post-install scripts
   if [[ -f "$INSTALL_DIR/post-install/all.sh" ]]; then
     echo ""
     bash "$INSTALL_DIR/post-install/all.sh"
