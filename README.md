@@ -16,7 +16,7 @@ Run `archinstall` with these settings:
 | Encryption | LUKS (REQUIRED) |
 | Bootloader | Limine |
 | Audio | Pipewire |
-| Network | Copy ISO network config |
+| Network | NetworkManager |
 
 ### Step 2: Install Romarchy
 
@@ -74,7 +74,7 @@ romarchy-install
 |-----|--------|
 | Super + Space | App launcher (Walker) |
 | Super + Escape | Power menu |
-| Super + Shift + L | Lock screen |
+| Super + Ctrl + L | Lock screen |
 | Super + T | Terminal |
 | Super + N | Editor (LazyVim) |
 | Super + B | Browser |
