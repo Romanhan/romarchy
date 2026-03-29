@@ -1,147 +1,44 @@
 #!/bin/bash
-set -e
+set -eEo pipefail
 
-ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
-INSTALL_DIR="$ROMARCHY_DIR/install"
+# Define locations (Omarchy-style)
+export ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+export ROMARCHY_INSTALL="$ROMARCHY_DIR/install"
+export ROMARCHY_INSTALL_LOG_FILE="/var/log/romarchy-install.log"
+export PATH="$ROMARCHY_DIR/bin:$PATH"
 
-usage() {
-  cat << EOF
-Romarchy Install Script
-
-Usage: romarchy-install [OPTIONS]
-
-Options:
-  --list           List available packs
-  --pack <name>    Install specific pack (core, terminal, launchers, utils, dev, extras)
-  --lazyvim        Setup LazyVim
-  --all            Install all packs (default)
-  --help           Show this help
-
-Packs:
-  core       - Hyprland, waybar, hyprlock, etc.
-  terminal   - Kitty, starship, eza, bat, etc.
-  launchers  - Walker, elephant, impala
-  utils      - Clipboard, screenshots, bluetooth, etc.
-  dev        - Git, neovim, fzf, zoxide, etc.
-  extras     - Fonts, fastfetch
-
-Examples:
-  romarchy-install              # Install all
-  romarchy-install --list       # List packs
-  romarchy-install --pack core  # Install only core
-EOF
-}
-
-list_packs() {
-  echo "Available packs:"
+# Help
+if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+  echo "Usage: romarchy-install"
   echo ""
-  for pack in "$INSTALL_DIR"/packs/*.sh; do
-    if [[ -f "$pack" ]]; then
-      local name=$(basename "$pack" .sh | sed 's/^[0-9]*-//')
-      echo "  $name"
-    fi
-  done
-}
-
-run_pack() {
-  local pack_name="$1"
-  local pack_file=""
-  
-  case "$pack_name" in
-    core)      pack_file="$INSTALL_DIR/packs/01-core.sh" ;;
-    terminal)  pack_file="$INSTALL_DIR/packs/02-terminal.sh" ;;
-    launchers) pack_file="$INSTALL_DIR/packs/03-launchers.sh" ;;
-    utils)     pack_file="$INSTALL_DIR/packs/04-utils.sh" ;;
-    dev)       pack_file="$INSTALL_DIR/packs/05-dev.sh" ;;
-    extras)    pack_file="$INSTALL_DIR/packs/06-extras.sh" ;;
-    *)
-      echo -e "\033[31mUnknown pack: $pack_name\033[0m"
-      exit 1
-      ;;
-  esac
-  
-  if [[ ! -f "$pack_file" ]]; then
-    echo -e "\033[31mPack file not found: $pack_file\033[0m"
-    exit 1
-  fi
-  
-  sync_packages
-  bash "$pack_file"
-  run_post_install
-}
-
-sync_packages() {
+  echo "Installs Romarchy (requires Arch Linux with BTRFS + LUKS + Limine)"
   echo ""
-  echo -e "\033[1;36m═══ Syncing packages ═══\033[0m"
-  echo -n "  Running yay -Syu... "
-  if yay -Syu --noconfirm 2>&1; then
-    echo -e "\033[32m✓\033[0m"
-  else
-    echo -e "\033[33m! Sync failed, continuing anyway...\033[0m"
-  fi
-}
-
-run_all() {
-  sync_packages
-  for pack in "$INSTALL_DIR"/packs/*.sh; do
-    if [[ -f "$pack" ]]; then
-      bash "$pack" || {
-        echo ""
-        echo -e "\033[31mInstall failed. Exiting.\033[0m"
-        exit 1
-      }
-    fi
-  done
-  
-  run_post_install
-  
-  echo ""
-  echo -e "\033[32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-  echo -e "\033[32m All packs installed successfully!\033[0m"
-  echo -e "\033[32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-}
-
-run_post_install() {
-  # Run login scripts first (limine-snapper, etc.)
-  if [[ -f "$ROMARCHY_DIR/install/login/all.sh" ]]; then
-    echo ""
-    bash "$ROMARCHY_DIR/install/login/all.sh"
-  fi
-  
-  # Then post-install scripts
-  if [[ -f "$INSTALL_DIR/post-install/all.sh" ]]; then
-    echo ""
-    bash "$INSTALL_DIR/post-install/all.sh"
-  fi
-}
-
-if [[ $# -eq 0 ]]; then
-  run_all
-else
-  case "$1" in
-    --list)
-      list_packs
-      ;;
-    --pack)
-      if [[ -z "$2" ]]; then
-        echo -e "\033[31mError: --pack requires an argument\033[0m"
-        exit 1
-      fi
-      run_pack "$2"
-      ;;
-    --all)
-      run_all
-      ;;
-    --lazyvim)
-      bash "$INSTALL_DIR/post-install/02-lazyvim.sh"
-      ;;
-    --help|-h)
-      usage
-      ;;
-    *)
-      echo -e "\033[31mUnknown option: $1\033[0m"
-      usage
-      exit 1
-      ;;
-  esac
+  echo "See: https://github.com/Romanhan/romarchy"
+  exit 0
 fi
+
+# Initialize log
+sudo mkdir -p /var/log
+sudo touch "$ROMARCHY_INSTALL_LOG_FILE"
+sudo chmod 666 "$ROMARCHY_INSTALL_LOG_FILE" 2>/dev/null || true
+
+echo "" >> "$ROMARCHY_INSTALL_LOG_FILE"
+echo "━━━ Romarchy Installation Started: $(date) ━━━" >> "$ROMARCHY_INSTALL_LOG_FILE"
+echo "" >> "$ROMARCHY_INSTALL_LOG_FILE"
+
+# Run installation stages (Omarchy-style)
+source "$ROMARCHY_INSTALL/helpers/all.sh"
+source "$ROMARCHY_INSTALL/preflight/all.sh"
+source "$ROMARCHY_INSTALL/packs/all.sh"
+source "$ROMARCHY_INSTALL/config/all.sh"
+source "$ROMARCHY_INSTALL/login/all.sh"
+source "$ROMARCHY_INSTALL/post-install/all.sh"
+
+echo "" >> "$ROMARCHY_INSTALL_LOG_FILE"
+echo "━━━ Romarchy Installation Completed: $(date) ━━━" >> "$ROMARCHY_INSTALL_LOG_FILE"
+
+echo ""
+success "Romarchy installation complete!"
+echo ""
+info "Log: /var/log/romarchy-install.log"
+info "Reboot to apply all changes"

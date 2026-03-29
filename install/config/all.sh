@@ -2,11 +2,11 @@
 # Copy Romarchy configs to ~/.config/
 
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+source "$ROMARCHY_DIR/install/helpers/ui.sh"
 
-echo ""
-echo "=== Copying Romarchy configs ==="
+header "Copying Romarchy configs"
 
 mkdir -p ~/.config
 cp -R "$ROMARCHY_DIR/config/"* ~/.config/
 
-echo "✓ Configs copied"
+success "Configs copied"

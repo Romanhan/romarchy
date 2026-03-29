@@ -44,7 +44,7 @@ mkdir -p ~/.config/elephant/providers
 if [[ -d /usr/lib/elephant/ ]]; then
   for provider in /usr/lib/elephant/*.so; do
     if [[ -f "$provider" ]]; then
-      local name=$(basename "$provider")
+      name=$(basename "$provider")
       if [[ ! -L ~/.config/elephant/providers/"$name" ]]; then
         ln -sf "$provider" ~/.config/elephant/providers/"$name"
         echo -e "  \033[32m✓\033[0m $name"

@@ -18,8 +18,6 @@ check_and_install "Utils" \
   p7zip \
   jq \
   poppler \
-  fd \
-  ripgrep \
   fzf \
   zoxide \
   resvg \
