@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = limine
+Target = limine-mkinitcpio-hook
+
+[Action]
+Description = Restoring Romarchy UKI as fallback bootloader...
+When = PostTransaction
+Exec = /bin/sh -c 'cp /boot/EFI/Linux/romarchy_linux.efi /boot/EFI/BOOT/BOOTX64.EFI'

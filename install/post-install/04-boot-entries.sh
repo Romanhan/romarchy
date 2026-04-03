@@ -22,8 +22,14 @@ fi
 
 # Detect disk and partition
 ESP_DEVICE=$(findmnt -n -o SOURCE /boot)
-ESP_DISK=$(echo "$ESP_DEVICE" | sed 's/[0-9]*$//')
-ESP_PART=$(echo "$ESP_DEVICE" | grep -o '[0-9]*$')
+# Handle NVMe naming (nvme0n1p1 -> disk=/dev/nvme0n1, part=1)
+if [[ "$ESP_DEVICE" =~ ^/dev/(nvme[0-9]+n[0-9]+)p([0-9]+)$ ]]; then
+  ESP_DISK="/dev/${BASH_REMATCH[1]}"
+  ESP_PART="${BASH_REMATCH[2]}"
+else
+  ESP_DISK=$(echo "$ESP_DEVICE" | sed 's/[0-9]*$//')
+  ESP_PART=$(echo "$ESP_DEVICE" | grep -o '[0-9]*$')
+fi
 
 if [[ -z "$ESP_DISK" ]] || [[ -z "$ESP_PART" ]]; then
   error "Could not detect disk/partition from $ESP_DEVICE"
@@ -64,12 +70,17 @@ while IFS= read -r line; do
 done < <(efibootmgr)
 
 # Create Romarchy entry (direct UKI boot - no menu)
+# Convert to ESP-relative path (strip /boot prefix since /boot IS the ESP mount point)
+ESP_UKI_LOADER="${UKI_PATH#/boot}"
 info "Creating Romarchy entry (direct boot)..."
-sudo efibootmgr --create --disk "$ESP_DISK" --part "$ESP_PART" --loader "$UKI_PATH" --label "Romarchy"
+info "  ESP-relative loader path: $ESP_UKI_LOADER"
+sudo efibootmgr --create --disk "$ESP_DISK" --part "$ESP_PART" --loader "$ESP_UKI_LOADER" --label "Romarchy"
 
 # Create Limine entry (bootloader with snapshots - for recovery)
+ESP_LIMINE_LOADER="${LIMINE_PATH#/boot}"
 info "Creating Limine entry (recovery/snapshots)..."
-sudo efibootmgr --create --disk "$ESP_DISK" --part "$ESP_PART" --loader "$LIMINE_PATH" --label "Limine"
+info "  ESP-relative loader path: $ESP_LIMINE_LOADER"
+sudo efibootmgr --create --disk "$ESP_DISK" --part "$ESP_PART" --loader "$ESP_LIMINE_LOADER" --label "Limine"
 
 # Set boot order: Romarchy first, then Limine
 ROMARCHY_NUM=$(efibootmgr | grep "Romarchy" | grep -o 'Boot[0-9]*' | grep -o '[0-9]*')
@@ -79,6 +90,11 @@ if [[ -n "$ROMARCHY_NUM" ]] && [[ -n "$LIMINE_NUM" ]]; then
   info "Setting boot order: Romarchy → Limine"
   sudo efibootmgr -o "$ROMARCHY_NUM,$LIMINE_NUM"
 fi
+
+# Copy UKI as fallback bootloader (handles BIOS that ignore EFI boot order)
+info "Copying UKI as fallback bootloader..."
+sudo cp "$UKI_PATH" /boot/EFI/BOOT/BOOTX64.EFI
+info "  BOOTX64.EFI now points to Romarchy UKI"
 
 echo ""
 success "EFI boot entries created"

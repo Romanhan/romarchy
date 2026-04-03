@@ -74,6 +74,30 @@ fi
 info "Setting up Limine theme..."
 sudo cp "$ROMARCHY_DIR/default/limine/limine.conf" /boot/limine.conf
 
+# Configure limine-snapper-sync to restore custom settings after regeneration
+# This prevents limine-snapper-sync from overriding our direct-boot configuration
+info "Configuring limine-snapper-sync to preserve custom settings..."
+sudo tee /usr/local/bin/romarchy-limine-post-save <<'EOF' >/dev/null
+#!/bin/bash
+# Restore romarchy limine settings after limine-snapper-sync regeneration
+# Use ^#* to match both commented and uncommented lines
+sed -i 's/^#*interface_branding: .*/interface_branding: Romarchy Bootloader/' /boot/limine.conf
+sed -i 's/^#*interface_branding_color: .*/interface_branding_color: 2/' /boot/limine.conf
+sed -i 's/^timeout: 3/#timeout: 3/' /boot/limine.conf
+sed -i 's/^default_entry: .*/default_entry: 2/' /boot/limine.conf
+EOF
+sudo chmod +x /usr/local/bin/romarchy-limine-post-save
+
+# Update limine-snapper-sync config to use our post-save script
+# IMPORTANT: Post-save script runs FIRST to modify limine.conf, THEN limine-enroll-config enrolls it
+sudo sed -i 's|^COMMANDS_AFTER_SAVE=.*|COMMANDS_AFTER_SAVE="/usr/local/bin/romarchy-limine-post-save && limine-enroll-config"|' /etc/limine-snapper-sync.conf
+
+# Install pacman hook to restore UKI as fallback after limine updates
+# This prevents limine-install from overwriting BOOTX64.EFI with limine
+info "Installing fallback restore hook..."
+sudo mkdir -p /etc/pacman.d/hooks
+sudo cp "$ROMARCHY_DIR/default/limine/99-romarchy-fallback-restore.hook" /etc/pacman.d/hooks/99-romarchy-fallback-restore.hook
+
 # Re-enable mkinitcpio hooks (Omarchy-style)
 if [[ -f /usr/share/libalpm/hooks/90-mkinitcpio-install.hook.disabled ]]; then
   sudo mv /usr/share/libalpm/hooks/90-mkinitcpio-install.hook.disabled /usr/share/libalpm/hooks/90-mkinitcpio-install.hook
@@ -126,9 +150,29 @@ sudo systemctl enable --now limine-snapper-sync.service
 sudo systemctl enable --now snapper-timeline.timer
 sudo systemctl enable --now snapper-cleanup.timer
 
+# Generate UKI (Omarchy-style)
+info "Generating UKI..."
+sudo limine-mkinitcpio
+
+# Copy UKI as fallback bootloader (handles BIOS that ignore EFI boot order)
+info "Copying UKI as fallback bootloader..."
+sudo cp /boot/EFI/Linux/romarchy_linux.efi /boot/EFI/BOOT/BOOTX64.EFI
+
 # Run limine-update to generate boot entries
 info "Generating boot entries..."
 sudo limine-update
+
+# Remove stale /Arch Linux entry if present (limine-update may create it from /etc/os-release)
+info "Cleaning stale boot entries..."
+sudo awk '
+BEGIN { skip=0 }
+/^\/Arch Linux$/ { skip=1; next }
+skip && /^\/[^ ]/ { skip=0 }
+skip && /^\/\+/ { skip=0 }
+!skip { print }
+' /boot/limine.conf > /tmp/limine-clean.conf
+sudo mv /tmp/limine-clean.conf /boot/limine.conf
+sudo limine-enroll-config
 
 # Verify limine-update added entries
 if ! grep -q "^/+" /boot/limine.conf; then
