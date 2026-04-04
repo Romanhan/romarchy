@@ -31,6 +31,17 @@ setup_symlinks() {
     ln -sf "$ROMARCHY_DIR" "$HOME/.config/romarchy"
     echo -e "\033[32m✓\033[0m"
   fi
+
+  echo ""
+  echo "Setting up mako theme:"
+  echo -n "  mako theme.ini... "
+  local current_theme=$(cat "$ROMARCHY_DIR/.current-theme" 2>/dev/null || echo "catppuccin-mocha-black")
+  if [[ -f "$ROMARCHY_DIR/themes/$current_theme/mako.ini" ]]; then
+    ln -sf "$ROMARCHY_DIR/themes/$current_theme/mako.ini" "$HOME/.config/mako/theme.ini"
+    echo -e "\033[32m✓\033[0m ($current_theme)"
+  else
+    echo -e "\033[33m!\033[0m (no mako.ini for $current_theme)"
+  fi
   
   echo ""
   echo "Setting up bashrc:"

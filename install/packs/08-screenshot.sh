@@ -24,7 +24,14 @@ mkdir -p "$HOME/.config/mako"
 mkdir -p "$HOME/.config/environment.d"
 cp -f "$ROMARCHY_DIR/config/satty/config.toml" "$HOME/.config/satty/config.toml"
 cp -f "$ROMARCHY_DIR/config/mako/config" "$HOME/.config/mako/config"
+cp -f "$ROMARCHY_DIR/config/mako/core.ini" "$HOME/.config/mako/core.ini"
 cp -f "$ROMARCHY_DIR/config/environment.d/romarchy.conf" "$HOME/.config/environment.d/romarchy.conf"
+
+# Set up mako theme symlink
+CURRENT_THEME=$(cat "$ROMARCHY_DIR/.current-theme" 2>/dev/null || echo "catppuccin-mocha-black")
+if [[ -f "$ROMARCHY_DIR/themes/$CURRENT_THEME/mako.ini" ]]; then
+  ln -sf "$ROMARCHY_DIR/themes/$CURRENT_THEME/mako.ini" "$HOME/.config/mako/theme.ini"
+fi
 
 # Create screenshots directory
 mkdir -p "$HOME/Pictures/Screenshots"

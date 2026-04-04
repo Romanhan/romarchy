@@ -66,6 +66,10 @@ apply_theme() {
         ln -sf "$theme_path/vscode.json" "$ROMARCHY_DIR/.local/share/romarchy/themes/current/vscode.json" 2>/dev/null || cp "$theme_path/vscode.json" "$ROMARCHY_DIR/.vscode-theme.json" 2>/dev/null || true
     fi
 
+    if [[ -f "$theme_path/mako.ini" ]]; then
+        ln -sf "$theme_path/mako.ini" "$HOME/.config/mako/theme.ini"
+    fi
+
     # TODO: Enable hyprlock theme generation once fully tested
     # if [[ -x "$ROMARCHY_DIR/bin/romarchy-hyprlock-gen" ]]; then
     #     "$ROMARCHY_DIR/bin/romarchy-hyprlock-gen" "$theme_name" 2>/dev/null || true
