@@ -1,0 +1,23 @@
+#!/bin/bash
+
+clear
+echo "Starting system update..."
+echo ""
+
+# Ensure screensaver/sleep doesn't set in during updates
+hyprctl dispatch tagwindow +noidle &>/dev/null || true
+
+# Update system packages (pacman + AUR)
+yay -Syu --noconfirm
+
+# Remove orphan packages
+yay -Rns $(yay -Qtdq 2>/dev/null) --noconfirm 2>/dev/null || true
+
+# Re-enable screensaver/sleep after updates
+hyprctl dispatch tagwindow -- -noidle &>/dev/null || true
+
+echo ""
+echo "Update complete!"
+echo ""
+echo "Press Enter to close..."
+read

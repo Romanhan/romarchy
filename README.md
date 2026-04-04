@@ -80,6 +80,55 @@ romarchy-install
 | Super + B | Browser |
 | Super + E | File manager |
 | Super + Y | Yazi file manager |
+| Super + Shift + A | AI Picker (Grok, Gemini, ChatGPT, Claude) |
+| Super + Shift + Y | YouTube |
+| Print | Screenshot (region) |
+| Shift + Print | Screenshot (fullscreen) |
+| Super + Alt + , | Edit last screenshot (Satty) |
+| Super + , | Dismiss last notification |
+| Super + Shift + , | Dismiss all notifications |
+| Super + Ctrl + Alt + T | Show time |
+| Super + Ctrl + Alt + B | Show battery status |
+
+## Screenshot
+
+Screenshot system inspired by [Omarchy](https://github.com/basecamp/omarchy):
+
+- **Print** — select region, saves to `~/Pictures/Screenshots/`, copies to clipboard
+- **Shift + Print** — fullscreen screenshot, same flow
+- Notification appears with "Edit" button — click to open in **Satty** (annotation editor with arrows, lines, blur, text)
+- **Super + Alt + ,** — edit last screenshot in Satty
+- **Super + Alt + ,** on notification — re-invoke last notification
+
+### Satty Editor
+
+Annotation tools available:
+- Pointer, Crop, Arrow, Line, Rectangle, Ellipse, Text, Marker, Blur, Brush
+- Press Enter — copy to clipboard
+- Press Escape — exit
+
+## Web Apps
+
+### AI Apps
+Installed automatically via `romarchy-ai-install`:
+- Grok (grok.com)
+- Gemini (gemini.google.com)
+- ChatGPT (chatgpt.com)
+- Claude (claude.ai)
+
+Access via:
+- App launcher (`Super + Space`) - search for app name
+- AI Picker (`Super + Shift + A`) - quick select menu
+
+### Installation
+
+```bash
+# Install AI web apps
+romarchy-ai-install
+
+# Install web app manually (via menu)
+romarchy-menu → Web Apps → Install Web App
+```
 
 ## Inspired by
 

@@ -22,7 +22,8 @@ main_menu() {
 󱐋  System
   Style
 󰣇  Update
-󰐥  Power Menu"
+󰐥  Power Menu
+󰰘  Web Apps"
 }
 
 power_menu() {
@@ -53,6 +54,11 @@ style_menu() {
     Fonts"
 }
 
+webapps_menu() {
+    echo -e "󰰘  Install Web App
+󰵮  Remove Web App"
+}
+
 show_font_menu() {
     local font_list=$("$ROMARCHY_DIR/bin/romarchy-font-list")
     local current=$("$ROMARCHY_DIR/bin/romarchy-font-current")
@@ -76,6 +82,7 @@ show_menu() {
         apps) apps_menu ;;
         system) system_menu ;;
         style) style_menu ;;
+        webapps) webapps_menu ;;
     esac | walker --dmenu -p "$prompt" --width 295 --minheight 1 --maxheight 300 2>/dev/null
 }
 
@@ -134,6 +141,12 @@ run_action() {
         *"Update")
             kitty --title "Romarchy Update" -e sh -c "cd $ROMARCHY_DIR && git pull && echo 'Done. Press Enter to exit.' && read"
             ;;
+*"Install Web App")
+            uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/romarchy-webapp-install"
+            ;;
+*"Remove Web App")
+            uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/romarchy-webapp-remove"
+            ;;
     esac
 }
 
@@ -155,6 +168,9 @@ navigate() {
         fi
         
         case "$choice" in
+            *Web\ Apps)
+                current="webapps"
+                ;;
             *Apps)
                 current="apps"
                 ;;

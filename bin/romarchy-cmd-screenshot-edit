@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Open the last screenshot in satty for editing.
+
+LAST_SCREENSHOT="/tmp/romarchy-last-screenshot"
+
+if [[ ! -f $LAST_SCREENSHOT ]]; then
+  notify-send "No screenshot found" "Take a screenshot first." -u normal -t 3000
+  exit 1
+fi
+
+FILEPATH=$(cat "$LAST_SCREENSHOT")
+
+if [[ ! -f $FILEPATH ]]; then
+  notify-send "Screenshot not found" "The file was deleted or moved." -u normal -t 3000
+  exit 1
+fi
+
+satty --filename "$FILEPATH" --copy-command wl-copy

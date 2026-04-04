@@ -22,4 +22,5 @@ check_and_install "Utils" \
   zoxide \
   resvg \
   imagemagick \
-  trash-cli
+  trash-cli \
+  gum

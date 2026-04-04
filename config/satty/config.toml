@@ -1,0 +1,12 @@
+[general]
+fullscreen = false
+early-exit = false
+initial-tool = "brush"
+copy-command = "wl-copy"
+save-after-copy = true
+default-hide-toolbars = false
+default-fill-shapes = false
+primary-highlighter = "block"
+actions-on-enter = ["save-to-clipboard"]
+actions-on-escape = ["exit"]
+no-window-decoration = true

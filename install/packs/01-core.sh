@@ -5,6 +5,7 @@ source "$ROMARCHY_DIR/install/helpers/check.sh"
 source "$ROMARCHY_DIR/install/helpers/ui.sh"
 
 check_and_install "Core" \
+  pacman-contrib \
   hyprland \
   waybar \
   hyprlock \

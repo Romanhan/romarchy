@@ -1,0 +1,23 @@
+#!/bin/bash
+
+AI_APPS="Grok
+Gemini
+ChatGPT
+Claude"
+
+CHOICE=$(echo -e "$AI_APPS" | walker --dmenu -p "AI" --width 250 --minheight 1 --maxheight 300 2>/dev/null)
+
+case "$CHOICE" in
+  Grok)
+    romarchy-launch-webapp https://grok.com
+    ;;
+  Gemini)
+    romarchy-launch-webapp https://gemini.google.com
+    ;;
+  ChatGPT)
+    romarchy-launch-webapp https://chatgpt.com
+    ;;
+  Claude)
+    romarchy-launch-webapp https://claude.ai
+    ;;
+esac

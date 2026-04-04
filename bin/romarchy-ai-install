@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+ICON_DIR="$HOME/.local/share/applications/icons"
+DESKTOP_DIR="$HOME/.local/share/applications/"
+
+mkdir -p "$ICON_DIR"
+
+install_ai_app() {
+  local APP_NAME="$1"
+  local APP_URL="$2"
+  
+  echo "Installing $APP_NAME..."
+  
+  FAVICON_URL="https://www.google.com/s2/favicons?domain=${APP_URL}&sz=128"
+  ICON_PATH="$ICON_DIR/${APP_NAME}.png"
+  
+  curl -fsSL -o "$ICON_PATH" "$FAVICON_URL" || true
+  
+  DESKTOP_FILE="$DESKTOP_DIR/${APP_NAME}.desktop"
+  
+  cat >"$DESKTOP_FILE" <<EOF
+[Desktop Entry]
+Version=1.0
+Name=$APP_NAME
+Comment=$APP_NAME
+Exec=romarchy-launch-webapp $APP_URL
+Terminal=false
+Type=Application
+Icon=$ICON_PATH
+StartupNotify=true
+EOF
+
+  chmod +x "$DESKTOP_FILE"
+  echo "Installed $APP_NAME"
+}
+
+# Install AI web apps
+install_ai_app "Grok" "https://grok.com"
+install_ai_app "Gemini" "https://gemini.google.com"
+install_ai_app "ChatGPT" "https://chatgpt.com"
+install_ai_app "Claude" "https://claude.ai"
+
+echo ""
+echo "All AI apps installed! You can find them in the app launcher (Super + Space)"
