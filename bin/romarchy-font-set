@@ -47,6 +47,9 @@ apply_font_pack() {
     
     if [[ -f "$font_path/waybar.css" ]]; then
         cat "$font_path/waybar.css" > "$ROMARCHY_DIR/config/waybar/font.css"
+        if ! grep -qi "propo" "$ROMARCHY_DIR/config/waybar/font.css"; then
+            sed -i "s/font-family: '\([^']*\)'/font-family: '\1 Propo'/" "$ROMARCHY_DIR/config/waybar/font.css"
+        fi
     fi
     
     if [[ -f "$font_path/gsettings.sh" ]]; then
@@ -80,10 +83,14 @@ EOF
 
 generate_waybar_css() {
     local font_name="$1"
+    local propo_tag=""
+    if ! echo "$font_name" | grep -qi "propo"; then
+        propo_tag=" Propo"
+    fi
     cat > "$ROMARCHY_DIR/config/waybar/font.css" << EOF
 /* System font: $font_name */
 * {
-  font-family: '$font_name', monospace;
+  font-family: '$font_name$propo_tag', monospace;
 }
 EOF
 }
