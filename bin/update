@@ -1,0 +1,26 @@
+#!/bin/bash
+
+check_updates() {
+  pacman_updates=$(checkupdates 2>/dev/null | wc -l)
+  aur_updates=$(yay -Qua 2>/dev/null | wc -l)
+  total=$((pacman_updates + aur_updates))
+
+  if [[ $total -gt 0 ]]; then
+    echo "󰅢 $total"
+  else
+    echo ""
+  fi
+}
+
+perform_updates() {
+  setsid uwsm app -- kitty --class=Romarchy --title=Romarchy -e bash -c "update-perform" &
+  wait $!
+  pkill -RTMIN+8 waybar
+}
+
+# Main logic
+if [[ "$1" == "update" ]]; then
+  perform_updates
+else
+  check_updates
+fi
