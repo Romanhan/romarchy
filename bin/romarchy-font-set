@@ -36,6 +36,9 @@ apply_font_pack() {
     
     if [[ -f "$font_path/kitty.conf" ]]; then
         cat "$font_path/kitty.conf" > "$ROMARCHY_DIR/config/kitty/font.conf"
+        if ! grep -qi "mono" "$ROMARCHY_DIR/config/kitty/font.conf"; then
+            sed -i 's/family="\([^"]*\)"/family="\1 mono"/' "$ROMARCHY_DIR/config/kitty/font.conf"
+        fi
     fi
     
     if [[ -f "$font_path/hyprland.conf" ]]; then
@@ -55,9 +58,13 @@ apply_font_pack() {
 
 generate_kitty_conf() {
     local font_name="$1"
+    local mono_tag=""
+    if ! echo "$font_name" | grep -qi "mono"; then
+        mono_tag=" mono"
+    fi
     cat > "$ROMARCHY_DIR/config/kitty/font.conf" << EOF
 # System font: $font_name
-font_family     family="$font_name"
+font_family     family="$font_name$mono_tag"
 bold_font       auto
 font_size       13
 EOF
