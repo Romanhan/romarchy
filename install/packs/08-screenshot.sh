@@ -46,3 +46,23 @@ fi
 
 # Reload mako to pick up new config
 systemctl --user restart mako 2>/dev/null
+
+# Set up xdg-image-viewers.list for default image handling
+if [[ -f "$ROMARCHY_DIR/config/xdg-image-viewers.list" ]]; then
+  mkdir -p "$HOME/.config"
+  cp -f "$ROMARCHY_DIR/config/xdg-image-viewers.list" "$HOME/.config/xdg-image-viewers.list"
+
+  # Set first available image viewer as default
+  while read -r viewer; do
+    if command -v "$viewer" &>/dev/null; then
+      viewer_desktop="${viewer}.desktop"
+      xdg-mime default "$viewer_desktop" image/jpeg 2>/dev/null || true
+      xdg-mime default "$viewer_desktop" image/png 2>/dev/null || true
+      xdg-mime default "$viewer_desktop" image/gif 2>/dev/null || true
+      xdg-mime default "$viewer_desktop" image/webp 2>/dev/null || true
+      xdg-mime default "$viewer_desktop" image/bmp 2>/dev/null || true
+      xdg-mime default "$viewer_desktop" image/svg+xml 2>/dev/null || true
+      break
+    fi
+  done < "$HOME/.config/xdg-image-viewers.list"
+fi
