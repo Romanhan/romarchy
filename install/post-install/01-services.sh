@@ -121,4 +121,13 @@ else
 fi
 
 echo ""
+echo -n "  Reloading Hyprland... "
+hyprctl reload >/dev/null 2>&1
+if pgrep -x Hyprland > /dev/null; then
+  echo -e "\033[32m✓\033[0m"
+else
+  echo -e "\033[33m~\033[0m (reload on next login)"
+fi
+
+echo ""
 echo -e "\033[32mDone!\033[0m"

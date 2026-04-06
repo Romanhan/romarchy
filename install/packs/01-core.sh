@@ -13,6 +13,7 @@ check_and_install "Core" \
   hyprpicker \
   hyprsunset \
   uwsm \
+  swayosd \
   brave-bin \
   swaybg \
   nautilus \
