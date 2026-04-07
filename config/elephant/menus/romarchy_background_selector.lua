@@ -58,7 +58,7 @@ function GetEntries()
             Text = FormatName(filename),
             Value = background,
             Actions = {
-              activate = "romarchy-bg-set " .. ShellEscape(background),
+              activate = "bg-set " .. ShellEscape(background),
             },
             Preview = background,
             PreviewType = "file",

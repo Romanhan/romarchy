@@ -25,7 +25,7 @@ install_ai_app() {
 Version=1.0
 Name=$APP_NAME
 Comment=$APP_NAME
-Exec=romarchy-launch-webapp $APP_URL
+Exec=launch-webapp $APP_URL
 Terminal=false
 Type=Application
 Icon=$ICON_PATH

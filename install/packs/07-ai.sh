@@ -7,4 +7,4 @@ source "$ROMARCHY_DIR/install/helpers/ui.sh"
 check_and_install "AI Web Apps" \
   gum
 
-"$ROMARCHY_DIR/bin/romarchy-ai-install"
+"$ROMARCHY_DIR/bin/ai-install"

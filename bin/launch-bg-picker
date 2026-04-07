@@ -11,4 +11,4 @@ if ! pgrep -x elephant > /dev/null; then
 fi
 
 # Launch walker with the background selector menu
-"$ROMARCHY_DIR/bin/romarchy-launch-walker" -m menus:romarchyBackgroundSelector --width 800 --minheight 400
+"$ROMARCHY_DIR/bin/launch-walker" -m menus:romarchyBackgroundSelector --width 800 --minheight 400

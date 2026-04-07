@@ -6,7 +6,7 @@ ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 THEMES_DIR="$ROMARCHY_DIR/themes"
 
 if [[ -z "$1" ]]; then
-    echo "Usage: romarchy-theme-set <theme-name>"
+    echo "Usage: theme-set <theme-name>"
     echo ""
     echo "Available themes:"
     for theme_dir in "$THEMES_DIR"/*; do

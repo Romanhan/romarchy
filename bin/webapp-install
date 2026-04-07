@@ -56,7 +56,7 @@ else
   ICON_PATH="$ICON_DIR/$ICON_REF"
 fi
 
-EXEC_COMMAND="${CUSTOM_EXEC:-romarchy-launch-webapp $APP_URL}"
+EXEC_COMMAND="${CUSTOM_EXEC:-launch-webapp $APP_URL}"
 
 DESKTOP_FILE="$HOME/.local/share/applications/$APP_NAME.desktop"
 

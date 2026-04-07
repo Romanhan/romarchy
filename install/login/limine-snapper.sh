@@ -187,10 +187,10 @@ if [[ -n $EFI ]] && efibootmgr &>/dev/null; then
   done < <(efibootmgr | grep -E "^Boot[0-9]{4}\*? Arch Linux Limine" | sed 's/^Boot\([0-9]\{4\}\).*/\1/')
 fi
 
-# Copy romarchy-snapshot script
-info "Installing romarchy-snapshot..."
-sudo cp "$ROMARCHY_DIR/bin/romarchy-snapshot" /usr/local/bin/romarchy-snapshot
-sudo chmod +x /usr/local/bin/romarchy-snapshot
+# Copy snapshot script
+info "Installing snapshot..."
+sudo cp "$ROMARCHY_DIR/bin/snapshot" /usr/local/bin/snapshot
+sudo chmod +x /usr/local/bin/snapshot
 
 success "Limine + Snapper setup complete"
 echo ""

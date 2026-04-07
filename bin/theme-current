@@ -48,7 +48,7 @@ navigate() {
                 ;;
             *)
                 # Set the theme
-                "$ROMARCHY_DIR/bin/romarchy-theme-set" "$choice"
+                "$ROMARCHY_DIR/bin/theme-set" "$choice"
                 exit 0
                 ;;
         esac

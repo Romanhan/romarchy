@@ -32,7 +32,7 @@ if [[ ! -d /usr/lib/modules/$(uname -r) ]]; then
   echo ""
   read -p "Reboot now? (y/N) " -n 1
   echo
-  [[ $REPLY =~ ^[Yy]$ ]] && romarchy-system-reboot
+  [[ $REPLY =~ ^[Yy]$ ]] && system-reboot
 fi
 
 echo ""

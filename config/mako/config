@@ -1,4 +1,4 @@
 include=~/.config/mako/theme.ini
 
 [summary="Screenshot saved"]
-on-button-left=exec sh -c '/home/romanhan/.local/share/romarchy/bin/romarchy-cmd-screenshot-edit'
+on-button-left=exec sh -c '/home/romanhan/.local/share/romarchy/bin/screenshot-edit'

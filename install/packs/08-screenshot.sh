@@ -13,10 +13,10 @@ check_and_install "Screenshot" \
 
 # Copy screenshot scripts
 mkdir -p "$HOME/.local/share/romarchy/bin"
-cp -f "$ROMARCHY_DIR/bin/romarchy-cmd-screenshot" "$HOME/.local/share/romarchy/bin/"
-cp -f "$ROMARCHY_DIR/bin/romarchy-cmd-screenshot-edit" "$HOME/.local/share/romarchy/bin/"
-chmod +x "$HOME/.local/share/romarchy/bin/romarchy-cmd-screenshot"
-chmod +x "$HOME/.local/share/romarchy/bin/romarchy-cmd-screenshot-edit"
+cp -f "$ROMARCHY_DIR/bin/screenshot" "$HOME/.local/share/romarchy/bin/"
+cp -f "$ROMARCHY_DIR/bin/screenshot-edit" "$HOME/.local/share/romarchy/bin/"
+chmod +x "$HOME/.local/share/romarchy/bin/screenshot"
+chmod +x "$HOME/.local/share/romarchy/bin/screenshot-edit"
 
 # Copy default configs
 mkdir -p "$HOME/.config/satty"
@@ -39,8 +39,8 @@ mkdir -p "$HOME/Pictures/Screenshots"
 # Add screenshot bindings to Hyprland if not present
 HYPR_BINDINGS="$HOME/.config/hypr/bindings.conf"
 if [[ -f $HYPR_BINDINGS ]]; then
-  if ! grep -q "romarchy-cmd-screenshot" "$HYPR_BINDINGS"; then
-    sed -i '/^# Mouse$/i # Screenshot\nbindd = , PRINT, Screenshot, exec, romarchy-cmd-screenshot\nbindd = SHIFT, PRINT, Screenshot fullscreen, exec, romarchy-cmd-screenshot fullscreen\nbindd = SUPER ALT, comma, Edit last screenshot, exec, romarchy-cmd-screenshot-edit\n' "$HYPR_BINDINGS"
+  if ! grep -q "screenshot" "$HYPR_BINDINGS"; then
+    sed -i '/^# Mouse$/i # Screenshot\nbindd = , PRINT, Screenshot, exec, screenshot\nbindd = SHIFT, PRINT, Screenshot fullscreen, exec, screenshot fullscreen\nbindd = SUPER ALT, comma, Edit last screenshot, exec, screenshot-edit\n' "$HYPR_BINDINGS"
   fi
 fi
 

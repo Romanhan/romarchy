@@ -1,3 +1,22 @@
 #!/bin/bash
 
-"$HOME/.local/share/romarchy/bin/romarchy-power-menu"
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+
+start_walker_service() {
+    if ! pgrep -f "walker --gapplication-service" > /dev/null 2>&1; then
+        nohup walker --gapplication-service > /dev/null 2>&1 &
+        sleep 0.3
+    fi
+}
+
+start_walker_service
+
+CHOICE=$(echo -e "󰐥  Shutdown\n󰜉  Reboot\n󰍃  Logout\n⏾  Suspend\n󰌾  Lock" | walker --dmenu -p "Power" --width 295 --minheight 1 --maxheight 300)
+
+case "$CHOICE" in
+  *"Shutdown"*) "$ROMARCHY_DIR/bin/system-shutdown" ;;
+  *"Reboot"*) "$ROMARCHY_DIR/bin/system-reboot" ;;
+  *"Logout"*) "$ROMARCHY_DIR/bin/system-logout" ;;
+  *"Suspend"*) "$ROMARCHY_DIR/bin/system-suspend" ;;
+  *"Lock"*) "$ROMARCHY_DIR/bin/lock-screen" ;;
+esac

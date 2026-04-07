@@ -27,7 +27,7 @@ Target = elephant*
 [Action]
 Description = Restarting Walker services after system update
 When = PostTransaction
-Exec = $ROMARCHY_DIR/bin/romarchy-restart-walker
+Exec = $ROMARCHY_DIR/bin/restart-walker
 EOF
   echo -e "  \033[32m✓\033[0m Pacman hook created"
 fi

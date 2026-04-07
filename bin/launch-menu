@@ -60,8 +60,8 @@ webapps_menu() {
 }
 
 show_font_menu() {
-    local font_list=$("$ROMARCHY_DIR/bin/romarchy-font-list")
-    local current=$("$ROMARCHY_DIR/bin/romarchy-font-current")
+    local font_list=$("$ROMARCHY_DIR/bin/font-list")
+    local current=$("$ROMARCHY_DIR/bin/font-current")
     
     local choice=$(menu "Font" "$font_list" "350")
     
@@ -69,7 +69,7 @@ show_font_menu() {
         return 1
     fi
     
-    "$ROMARCHY_DIR/bin/romarchy-font-set" "$choice"
+    "$ROMARCHY_DIR/bin/font-set" "$choice"
 }
 
 show_menu() {
@@ -91,16 +91,16 @@ run_action() {
     
     case "$choice" in
         *"Shutdown")
-            "$ROMARCHY_DIR/bin/romarchy-system-shutdown"
+            "$ROMARCHY_DIR/bin/system-shutdown"
             ;;
         *"Reboot")
-            "$ROMARCHY_DIR/bin/romarchy-system-reboot"
+            "$ROMARCHY_DIR/bin/system-reboot"
             ;;
         *"Suspend")
-            "$ROMARCHY_DIR/bin/romarchy-system-suspend"
+            "$ROMARCHY_DIR/bin/system-suspend"
             ;;
         *"Lock")
-            "$ROMARCHY_DIR/bin/romarchy-lock-screen"
+            "$ROMARCHY_DIR/bin/lock-screen"
             ;;
         *"Terminal")
             "$ROMARCHY_DIR/bin/launch-terminal"
@@ -130,10 +130,10 @@ run_action() {
             hyprctl dispatch exec "kitty -e nvim ~/.local/share/romarchy/config/hypr/input.conf"
             ;;
         *"Themes")
-            "$ROMARCHY_DIR/bin/romarchy-theme-current"
+            "$ROMARCHY_DIR/bin/theme-current"
             ;;
         *"Backgrounds")
-            "$ROMARCHY_DIR/bin/romarchy-bg-install"
+            "$ROMARCHY_DIR/bin/bg-install"
             ;;
         *"Fonts")
             show_font_menu
@@ -142,10 +142,10 @@ run_action() {
             kitty --title "Romarchy Update" -e sh -c "cd $ROMARCHY_DIR && git pull && echo 'Done. Press Enter to exit.' && read"
             ;;
 *"Install Web App")
-            uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/romarchy-webapp-install"
+uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/webapp-install"
             ;;
-*"Remove Web App")
-            uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/romarchy-webapp-remove"
+        *"Remove Web App")
+            uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/webapp-remove"
             ;;
     esac
 }

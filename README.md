@@ -33,7 +33,7 @@ git clone https://github.com/Romanhan/romarchy.git ~/.local/share/romarchy
 
 ## Features
 
-- **Snapshots**: `romarchy-snapshot create/list/restore`
+- **Snapshots**: `snapshot create/list/restore`
 - **Themes**: Catppuccin Mocha (dark)
 - **Bootloader**: Limine with direct UKI boot
 - **Encryption**: LUKS with Plymouth password dialog
@@ -110,7 +110,7 @@ Annotation tools available:
 ## Web Apps
 
 ### AI Apps
-Installed automatically via `romarchy-ai-install`:
+Installed automatically via `ai-install`:
 - Grok (grok.com)
 - Gemini (gemini.google.com)
 - ChatGPT (chatgpt.com)
@@ -124,10 +124,10 @@ Access via:
 
 ```bash
 # Install AI web apps
-romarchy-ai-install
+ai-install
 
 # Install web app manually (via menu)
-romarchy-menu → Web Apps → Install Web App
+launch-menu → Web Apps → Install Web App
 ```
 
 ## Inspired by

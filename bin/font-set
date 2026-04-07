@@ -6,7 +6,7 @@ ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 FONTS_DIR="$ROMARCHY_DIR/fonts"
 
 show_usage() {
-    echo "Usage: romarchy-font-set <font-name>"
+    echo "Usage: font-set <font-name>"
     echo ""
     echo "Available font packs:"
     for font_dir in "$FONTS_DIR"/*; do
