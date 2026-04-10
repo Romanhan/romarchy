@@ -32,6 +32,7 @@ echo "$THEME_NAME" > "$ROMARCHY_DIR/.current-theme"
 apply_theme() {
     local theme_path="$1"
     local theme_name=$(basename "$theme_path")
+    local theme_dir="$THEMES_DIR/$theme_name"
 
     if [[ -f "$theme_path/hyprland.conf" ]]; then
         rm -f "$ROMARCHY_DIR/config/hypr/theme.conf"
@@ -70,9 +71,8 @@ apply_theme() {
         ln -sf "$theme_path/mako.ini" "$HOME/.config/mako/theme.ini"
     fi
 
-    if [[ -f "$theme_path/btop.theme" ]]; then
-        mkdir -p "$HOME/.config/btop/themes"
-        cp "$theme_path/btop.theme" "$HOME/.config/btop/themes/"
+    if [[ -f "$theme_dir/colors.toml" ]] && [[ -x "$ROMARCHY_DIR/bin/theme-set-templates" ]]; then
+        "$ROMARCHY_DIR/bin/theme-set-templates" "$theme_name"
         if [[ -f "$HOME/.config/btop/btop.conf" ]]; then
             sed -i "s/^color_theme = .*/color_theme = \"$theme_name\"/" "$HOME/.config/btop/btop.conf"
         fi
