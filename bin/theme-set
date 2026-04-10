@@ -82,6 +82,10 @@ hyprctl reload 2>/dev/null || true
 killall -SIGUSR2 waybar 2>/dev/null || true
 killall -SIGUSR2 walker 2>/dev/null || true
 
+if pgrep -x btop > /dev/null; then
+    pkill -SIGUSR2 btop 2>/dev/null || true
+fi
+
 if command -v makoctl &> /dev/null; then
     makoctl reload 2>/dev/null || true
 fi

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+APP_ID="org.romarchy.$(basename "$1")"
+LAUNCH_COMMAND="$SCRIPT_DIR/launch-tui $@"
+
+exec "$SCRIPT_DIR/launch-or-focus" "$APP_ID" "$LAUNCH_COMMAND"

@@ -21,4 +21,5 @@ check_and_install "Core" \
   pipewire \
   pipewire-alsa \
   pipewire-pulse \
-  wireplumber
+  wireplumber \
+  xdg-terminal-exec
