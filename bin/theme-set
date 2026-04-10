@@ -70,6 +70,14 @@ apply_theme() {
         ln -sf "$theme_path/mako.ini" "$HOME/.config/mako/theme.ini"
     fi
 
+    if [[ -f "$theme_path/btop.theme" ]]; then
+        mkdir -p "$HOME/.config/btop/themes"
+        cp "$theme_path/btop.theme" "$HOME/.config/btop/themes/"
+        if [[ -f "$HOME/.config/btop/btop.conf" ]]; then
+            sed -i "s/^color_theme = .*/color_theme = \"$theme_name\"/" "$HOME/.config/btop/btop.conf"
+        fi
+    fi
+
     # TODO: Enable hyprlock theme generation once fully tested
     # if [[ -x "$ROMARCHY_DIR/bin/romarchy-hyprlock-gen" ]]; then
     #     "$ROMARCHY_DIR/bin/romarchy-hyprlock-gen" "$theme_name" 2>/dev/null || true
