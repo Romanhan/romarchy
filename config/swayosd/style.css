@@ -1,7 +1,7 @@
 @import "../swayosd/theme.css";
 
 window {
-  border-radius: 16px;
+  border-radius: 8px;
   opacity: 0.97;
   border: 2px solid @border-color;
 

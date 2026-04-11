@@ -7,3 +7,6 @@ source "$ROMARCHY_BASH/envs"
 source "$ROMARCHY_BASH/shell"
 source "$ROMARCHY_BASH/aliases"
 source "$ROMARCHY_BASH/init"
+
+# Load readline config for better TAB completion
+[[ $- == *i* ]] && bind -f "$ROMARCHY_BASH/inputrc"

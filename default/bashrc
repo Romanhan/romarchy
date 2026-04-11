@@ -1,0 +1,10 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# All the default Romarchy aliases and functions
+source ~/.local/share/romarchy/default/bash/rc
+
+# Add your own exports, aliases, and functions here.
+#
+# Make an alias for invoking commands you use constantly
+# alias p='python'

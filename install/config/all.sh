@@ -9,4 +9,10 @@ header "Copying Romarchy configs"
 mkdir -p ~/.config
 cp -R "$ROMARCHY_DIR/config/"* ~/.config/
 
+for script in "$ROMARCHY_DIR/install/config/"*.sh; do
+  if [[ -f "$script" && "$(basename "$script")" != "all.sh" ]]; then
+    bash "$script"
+  fi
+done
+
 success "Configs copied"

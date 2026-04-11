@@ -12,4 +12,5 @@ check_and_install "Terminal" \
   fd \
   ripgrep \
   less \
-  tree
+  tree \
+  bash-completion

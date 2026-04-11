@@ -40,36 +40,10 @@ style = "~/.config/swayosd/style.css"
 EOF
 echo -e "\033[32m✓\033[0m"
 
-echo -n "  style.css (imports theme)... "
-cat > "$HOME/.config/swayosd/style.css" << 'EOF'
-@import "../romarchy/current/theme/swayosd.css";
-
-window#osd {
-  border-radius: 10px;
-  opacity: 0.97;
-  border: 2px solid @accent;
-  background-color: @background;
-}
-
-window#osd label {
-  font-size: 11pt;
-  color: @foreground;
-}
-
-window#osd image {
-  min-width: 20px;
-  min-height: 20px;
-  color: @accent;
-}
-
-window#osd progressbar {
-  border-radius: 0;
-}
-
-window#osd progress {
-  background-color: @accent;
-}
-EOF
+echo -n "  style.css... "
+if [[ ! -f "$HOME/.config/swayosd/style.css" ]]; then
+  cp "$ROMARCHY_DIR/config/swayosd/style.css" "$HOME/.config/swayosd/style.css"
+fi
 echo -e "\033[32m✓\033[0m"
 
 echo ""
