@@ -1,58 +1,10 @@
 #!/bin/bash
 
-ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
-THEMES_DIR="$ROMARCHY_DIR/themes"
+CURRENT_THEME_PATH="$HOME/.local/share/romarchy/.current-theme"
 
-start_walker_service() {
-    if ! pgrep -f "walker --gapplication-service" > /dev/null 2>&1; then
-        nohup walker --gapplication-service > /dev/null 2>&1 &
-        sleep 0.3
-    fi
-}
-
-show_theme_menu() {
-    start_walker_service
-    local current=$(cat "$ROMARCHY_DIR/.current-theme" 2>/dev/null || echo "catppuccin-mocha-black")
-    
-    local options=""
-    for theme_dir in "$THEMES_DIR"/*; do
-        if [[ -d "$theme_dir" ]]; then
-            theme_name=$(basename "$theme_dir")
-            if [[ "$theme_name" == "$current" ]]; then
-                options="$options\n✓  $theme_name"
-            else
-                options="$options\n   $theme_name"
-            fi
-        fi
-    done
-    options="$options\n↩  Back"
-    
-    echo -e "$options" | walker --dmenu -p "Themes" --width 295 --minheight 1 --maxheight 300
-}
-
-navigate() {
-    while true; do
-        local choice=$(show_theme_menu)
-        
-        # Escape - go back
-        if [[ -z "$choice" ]]; then
-            exit 0
-        fi
-        
-        case "$choice" in
-            *Back)
-                exit 0
-                ;;
-            ✓*)
-                # Already selected, do nothing
-                ;;
-            *)
-                # Set the theme
-                "$ROMARCHY_DIR/bin/theme-set" "$choice"
-                exit 0
-                ;;
-        esac
-    done
-}
-
-navigate
+if [[ -f "$CURRENT_THEME_PATH" ]]; then
+    cat "$CURRENT_THEME_PATH"
+else
+    echo "No theme set"
+    exit 1
+fi

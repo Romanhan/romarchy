@@ -1,4 +1,4 @@
-$activeBorderColor = rgb(cba6f7)
+$activeBorderColor = rgb({{ accent_strip }})
 
 general {
     col.active_border = $activeBorderColor

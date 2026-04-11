@@ -1,10 +1,11 @@
-/* Catppuccin Mocha Black - Waybar Theme */
+/* Waybar Theme */
 
 @import 'font.css';
+@import '../romarchy/current/theme/waybar.css';
 
 * {
-  background-color: #000000;
-  color: #cdd6f4;
+  background-color: @background;
+  color: @foreground;
 
   border: none;
   border-radius: 0;
