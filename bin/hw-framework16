@@ -1,0 +1,4 @@
+#!/bin/bash
+
+[[ $(cat /sys/class/dmi/id/sys_vendor 2>/dev/null) == "Framework" ]] &&
+  hw-match "Laptop 16"

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+state="${1:-}"
+interface="${2:-wlan0}"
+
+if [[ -z $state ]]; then
+  echo "Usage: wifi-powersave <on|off> [interface]"
+  exit 1
+fi
+
+if [[ $state == "on" ]]; then
+  echo "Enabling WiFi power save..."
+  iw dev "$interface" set power_save on 2>/dev/null
+elif [[ $state == "off" ]]; then
+  echo "Disabling WiFi power save..."
+  iw dev "$interface" set power_save off 2>/dev/null
+fi

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Unblocking WiFi..."
+rfkill unblock wifi
+rfkill list wifi
+
+echo "Restarting iwd service..."
+sudo systemctl restart iwd
+
+echo "WiFi service restarted."

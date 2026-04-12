@@ -1,0 +1,3 @@
+#!/bin/bash
+
+[[ -d /sys/class/net/wlan0 ]] && grep -qi "intel" /sys/class/net/wlan0/device/uevent 2>/dev/null

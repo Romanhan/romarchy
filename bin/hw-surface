@@ -1,0 +1,4 @@
+#!/bin/bash
+
+[[ $(cat /sys/class/dmi/id/sys_vendor 2>/dev/null) == "Microsoft Corporation" ]] &&
+  hw-match "Surface"

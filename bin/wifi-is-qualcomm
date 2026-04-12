@@ -1,0 +1,3 @@
+#!/bin/bash
+
+[[ -d /sys/class/net/wlan0 ]] && grep -qi "168c\|ath10k\|atheros" /sys/class/net/wlan0/device/uevent 2>/dev/null
