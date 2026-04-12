@@ -38,23 +38,48 @@ git clone https://github.com/Romanhan/romarchy.git ~/.local/share/romarchy
 - **Bootloader**: Limine with direct UKI boot
 - **Encryption**: LUKS with Plymouth password dialog
 - **Shell**: Kitty + Starship prompt
+- **WiFi**: iwd + NetworkManager (Qualcomm Atheros support)
+- **Hardware Detection**: Automatic detection for ASUS ROG, Framework, Surface, Intel, Vulkan
 
 ## Structure
 
 ```
 romarchy/
-├── bin/           # Scripts (launchers, power menu, etc.)
+├── bin/           # Scripts (launchers, power menu, hw detection, etc.)
 ├── config/        # App configs (hypr, waybar, kitty, etc.)
 ├── default/       # Default configs (limine, plymouth)
 ├── install/       # Installation scripts
 │   ├── helpers/   # Shared functions (check.sh, ui.sh, errors.sh, logging.sh)
 │   ├── preflight/ # System checks (guard.sh, disable-mkinitcpio.sh)
 │   ├── packs/     # Package installation (01-core, 02-terminal, etc.)
-│   ├── config/    # Config copying
+│   ├── config/    # Config copying + hardware setup
 │   ├── login/     # Limine + Snapper setup
 │   └── post-install/ # Post-install services
 └── AGENTS.md
 ```
+
+## Hardware Detection
+
+Automatic hardware detection enables machine-specific configurations:
+
+| Script | Detects |
+|--------|--------|
+| `hw-asus-rog` | ASUS ROG laptops |
+| `hw-intel` | Intel CPUs |
+| `hw-framework16` | Framework Laptop 16 |
+| `hw-surface` | Microsoft Surface |
+| `hw-vulkan` | Vulkan support |
+| `hw-match` | Match DMI product name |
+
+Used in install scripts for conditional configurations (e.g., Intel-specific fixes).
+
+## WiFi
+
+Uses iwd for WiFi connections + NetworkManager for DHCP/DNS:
+
+- Works with **all WiFi cards** (Qualcomm Atheros, Intel, etc.)
+- Power save rules for laptops (on battery)
+- Hardware detection for WiFi card type (`wifi-is-qualcomm`, `wifi-is-intel`)
 
 ## Installation Flow
 
