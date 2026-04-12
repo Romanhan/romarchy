@@ -69,6 +69,7 @@ Automatic hardware detection enables machine-specific configurations:
 | `hw-framework16` | Framework Laptop 16 |
 | `hw-surface` | Microsoft Surface |
 | `hw-vulkan` | Vulkan support |
+| `hw-nvidia` | NVIDIA GPUs |
 | `hw-match` | Match DMI product name |
 
 Used in install scripts for conditional configurations (e.g., Intel-specific fixes).
