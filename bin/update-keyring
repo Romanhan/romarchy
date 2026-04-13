@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+current=$(pacman -Q archlinux-keyring 2>/dev/null | awk '{print $2}')
+latest=$(pacman -Si archlinux-keyring 2>/dev/null | awk '/^Version/{print $3}')
+
+if [[ "$current" == "$latest" ]] || [[ -z "$latest" ]]; then
+    echo -e "\e[34mArch keyring already latest ($current)\e[0m"
+else
+    echo -e "\e[32mUpdate Arch signing keys: $current -> $latest\e[0m"
+    sudo pacman -Sy --noconfirm archlinux-keyring >/dev/null
+fi

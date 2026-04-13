@@ -4,7 +4,9 @@ ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 
 check_pkg() {
   local pkg="$1"
-  if pacman -Q "$pkg" &>/dev/null || yay -Q "$pkg" &>/dev/null; then
+  if pacman -Q "$pkg" &>/dev/null; then
+    return 0
+  elif command -v yay &>/dev/null && yay -Q "$pkg" &>/dev/null; then
     return 0
   fi
   return 1
@@ -49,8 +51,12 @@ check_and_install() {
       local install_cmd=""
       if pacman -Si "$pkg" &>/dev/null; then
         install_cmd="sudo pacman -S --noconfirm $pkg"
-      else
+      elif command -v yay &>/dev/null; then
         install_cmd="yay -S --noconfirm $pkg"
+      else
+        echo -e "  \033[31m✗\033[0m yay not installed, cannot install AUR package"
+        failed+=("$pkg")
+        continue
       fi
       
       if eval "$install_cmd" 2>&1; then

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+echo -e "\e[32mUpdate Romarchy\e[0m"
+
+system-update-time
+
+hyprctl keyword debug:suppress_errors true &>/dev/null || true
+
+git -C $ROMARCHY_DIR pull --autostash
+git -C $ROMARCHY_DIR --no-pager diff --check || git -C $ROMARCHY_DIR reset --merge
+
+hyprctl reload &>/dev/null || true

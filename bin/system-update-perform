@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+hyprctl dispatch tagwindow +noidle &>/dev/null || true
+
+update-keyring
+update-system-pkgs
+update-aur-pkgs
+update-orphan-pkgs
+update-restart
+
+hyprctl dispatch tagwindow -- -noidle &>/dev/null || true
+
+gum spin --spinner "globe" --title "Done! Press any key to close..." -- bash -c 'read -n 1 -s'

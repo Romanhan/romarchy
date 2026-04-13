@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if pacman -Qem >/dev/null; then
+  echo -e "\e[32mUpdate AUR packages\e[0m"
+  yay -Sua --noconfirm --cleanafter
+  echo
+else
+  echo -e "\e[34mNo AUR packages installed, skipping\e[0m"
+fi

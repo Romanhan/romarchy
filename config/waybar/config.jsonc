@@ -55,7 +55,7 @@
  "custom/updates": {
     "format": "{}",
     "exec": "$ROMARCHY_PATH/bin/update",
-    "on-click": "$ROMARCHY_PATH/bin/update update",
+    "on-click": "$ROMARCHY_PATH/bin/system-update",
     "tooltip-format": "System updates available",
     "interval": 3600,
     "signal": 8

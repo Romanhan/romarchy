@@ -1,6 +1,31 @@
 #!/bin/bash
 
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+export PATH="$ROMARCHY_DIR/bin:$PATH"
+
+BACK_TO_EXIT=false
+
+toggle_existing_menu() {
+    if pgrep -f "walker.*--dmenu" >/dev/null; then
+        walker --close >/dev/null 2>&1
+        exit 0
+    fi
+}
+
+back_to() {
+    local parent_menu="$1"
+
+    if [[ $BACK_TO_EXIT == "true" ]]; then
+        exit 0
+    elif [[ -n $parent_menu ]]; then
+        "$parent_menu"
+    else
+        show_main_menu
+    fi
+}
+
+USER_EXTENSIONS="$HOME/.config/romarchy/extensions/menu.sh"
+[[ -f $USER_EXTENSIONS ]] && source "$USER_EXTENSIONS"
 
 start_walker_service() {
     if ! pgrep -f "walker --gapplication-service" > /dev/null 2>&1; then
@@ -13,7 +38,7 @@ menu() {
     local prompt="$1"
     local options="$2"
     local width="${3:-295}"
-    
+
     echo -e "$options" | walker --dmenu -p "$prompt" --width "$width" --minheight 1 --maxheight 300 2>/dev/null
 }
 
@@ -22,7 +47,7 @@ main_menu() {
 󱐋  System
   Style
 󰣇  Update
-󰐥  Power Menu
+󰐥  Power
 󰰘  Web Apps"
 }
 
@@ -31,14 +56,6 @@ power_menu() {
 󰜉  Reboot
 ⏾  Suspend
 󰌾  Lock"
-}
-
-apps_menu() {
-    echo -e "  Terminal
-  File Manager
-󰊯  Browser
-  Editor
-󰨞  VS Code"
 }
 
 system_menu() {
@@ -72,23 +89,9 @@ show_font_menu() {
     "$ROMARCHY_DIR/bin/font-set" "$choice"
 }
 
-show_menu() {
-    local menu_type="$1"
-    local prompt="$2"
-    
-    case "$menu_type" in
-        main) main_menu ;;
-        power) power_menu ;;
-        apps) apps_menu ;;
-        system) system_menu ;;
-        style) style_menu ;;
-        webapps) webapps_menu ;;
-    esac | walker --dmenu -p "$prompt" --width 295 --minheight 1 --maxheight 300 2>/dev/null
-}
-
 run_action() {
     local choice="$1"
-    
+
     case "$choice" in
         *"Shutdown")
             "$ROMARCHY_DIR/bin/system-shutdown"
@@ -101,21 +104,6 @@ run_action() {
             ;;
         *"Lock")
             "$ROMARCHY_DIR/bin/lock-screen"
-            ;;
-        *"Terminal")
-            "$ROMARCHY_DIR/bin/launch-terminal"
-            ;;
-        *"File Manager")
-            "$ROMARCHY_DIR/bin/launch-yazi"
-            ;;
-        *"Browser")
-            "$ROMARCHY_DIR/bin/launch-browser"
-            ;;
-        *"Editor")
-            "$ROMARCHY_DIR/bin/launch-editor"
-            ;;
-        *"VS Code")
-            uwsm app -- code
             ;;
         *"Wifi")
             "$ROMARCHY_DIR/bin/launch-wifi"
@@ -139,10 +127,10 @@ run_action() {
             show_font_menu
             ;;
         *"Update")
-            kitty --title "Romarchy Update" -e sh -c "cd $ROMARCHY_DIR && git pull && echo 'Done. Press Enter to exit.' && read"
+            uwsm-app -- kitty --class RomarchyUpdate -e system-update
             ;;
-*"Install Web App")
-uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/webapp-install"
+        *"Install Web App")
+            uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/webapp-install"
             ;;
         *"Remove Web App")
             uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/webapp-remove"
@@ -150,48 +138,79 @@ uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/webapp-install"
     esac
 }
 
-navigate() {
-    local current="main"
-    
-    start_walker_service
-    
-    while true; do
-        local choice=$(show_menu "$current" "Menu")
-        
-        if [[ -z "$choice" ]]; then
-            if [[ "$current" != "main" ]]; then
-                current="main"
-                continue
-            else
-                exit 0
-            fi
-        fi
-        
-        case "$choice" in
-            *Web\ Apps)
-                current="webapps"
-                ;;
-            *Apps)
-                current="apps"
-                ;;
-            *System)
-                current="system"
-                ;;
-            *Style)
-                current="style"
-                ;;
-            *Power\ Menu)
-                current="power"
-                ;;
-            *Back)
-                current="main"
-                ;;
-            *)
-                run_action "$choice"
-                exit 0
-                ;;
-        esac
-    done
+show_apps_menu() {
+    launch-walker
 }
 
-navigate
+show_system_menu() {
+    local choice=$(menu "System" "$(system_menu)")
+    if [[ -z "$choice" ]]; then
+        back_to show_main_menu
+    else
+        run_action "$choice"
+    fi
+}
+
+show_style_menu() {
+    local choice=$(menu "Style" "$(style_menu)")
+    if [[ -z "$choice" ]]; then
+        back_to show_main_menu
+    else
+        run_action "$choice"
+    fi
+}
+
+show_power_menu() {
+    local choice=$(menu "Power" "$(power_menu)")
+    if [[ -z "$choice" ]]; then
+        back_to show_main_menu
+    else
+        run_action "$choice"
+    fi
+}
+
+show_webapps_menu() {
+    local choice=$(menu "Web Apps" "$(webapps_menu)")
+    if [[ -z "$choice" ]]; then
+        back_to show_main_menu
+    else
+        run_action "$choice"
+    fi
+}
+
+show_main_menu() {
+    start_walker_service
+    local choice
+    choice=$(echo -e "$(main_menu)" | walker --dmenu -p "Go" --width 295 --minheight 1 --maxheight 630 2>/dev/null)
+    [[ -z "$choice" ]] && exit 0
+
+    case "$choice" in
+        *Web\ Apps*) show_webapps_menu ;;
+        *Apps) show_apps_menu ;;
+        *System) show_system_menu ;;
+        *Style) show_style_menu ;;
+        *Power*) show_power_menu ;;
+        *) run_action "$choice" ;;
+    esac
+}
+
+go_to_menu() {
+    case "${1,,}" in
+    *apps*) show_apps_menu ;;
+    *system*) show_system_menu ;;
+    *style*) show_style_menu ;;
+    *power*) show_power_menu ;;
+    *webapps*) show_webapps_menu ;;
+    *update*) run_action "Update" ;;
+    *) show_main_menu ;;
+    esac
+}
+
+toggle_existing_menu
+
+if [[ -n $1 ]]; then
+    BACK_TO_EXIT=true
+    go_to_menu "$1"
+else
+    show_main_menu
+fi

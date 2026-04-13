@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+
+echo -e "\e[32mUpdate system packages\e[0m"
+sudo pacman -Syyu --noconfirm
