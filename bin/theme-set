@@ -84,6 +84,17 @@ if pgrep -x kitty >/dev/null; then
   killall -SIGUSR1 kitty >/dev/null
 fi
 
+# Copy nvim theme (LazyVim)
+if [[ -f "$CURRENT_THEME_PATH/nvim.lua" ]]; then
+  mkdir -p "$HOME/.config/nvim/lua/plugins"
+  cp "$CURRENT_THEME_PATH/nvim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
+fi
+
+# Restart opencode
+if [[ -x "$ROMARCHY_DIR/bin/theme-set-opencode" ]]; then
+  theme-set-opencode
+fi
+
 # Apply app-specific themes
 if [[ -x "$ROMARCHY_DIR/bin/theme-set-gnome" ]]; then
   theme-set-gnome

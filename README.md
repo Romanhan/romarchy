@@ -182,14 +182,17 @@ bg-next
 | App | Theme Method |
 |-----|-------------|
 | **Waybar** | Updates style.css from theme |
-| **GTK3/GTK4** | Generates gtk.css + settings.ini |
-| **Nautilus** | GTK theming + restart |
+| **GTK/GNOME** | gsettings (gtk-theme, icon-theme, color-scheme) |
+| **Nautilus** | GTK theming |
 | **Mako** | Symlinks mako.ini |
 | **Walker** | Copies walker.css |
-| **btop** | Symlinks btop.theme |
+| **btop** | current.theme symlink + color_theme = "current" |
 | **SwayOSD** | Generates theme.css |
 | **Hyprlock** | Generates theme.conf |
 | **Kitty** | Generates theme.conf |
+| **Ghostty** | Generates theme.conf |
+| **OpenCode** | SIGUSR2 to reload config |
+| **Neovim** | Copies nvim.lua to plugins |
 | **Background** | Updates swaybg with theme background |
 
 ### Supported Themes
@@ -199,19 +202,10 @@ Comes with 20+ themes including:
 - osaka-jade
 - tokyo-night
 - nord
-- nordic
 - gruvbox
 - everforest
-- rossa
+- rose-pine
 - and more...
-
-### GTK Theming
-
-If packages are installed (adw-gtk-theme, yaru-icon-theme), theme-switching also updates:
-- GTK3/GTK4 CSS theming
-- Icon theme (Yaru variants)
-- Cursor theme
-- XDG desktop portal config
 
 ## Inspired by
 

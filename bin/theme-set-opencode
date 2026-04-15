@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if pgrep -x opencode >/dev/null; then
+  killall -SIGUSR2 opencode
+fi

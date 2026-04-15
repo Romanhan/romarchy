@@ -24,6 +24,7 @@ check_and_install "Utils" \
   imagemagick \
   trash-cli \
   gum \
-  adw-gtk-theme \
   yaru-icon-theme \
+  xdg-desktop-portal-gtk \
+  xdg-desktop-portal-hyprland \
   btop

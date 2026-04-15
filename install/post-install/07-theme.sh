@@ -55,10 +55,7 @@ mkdir -p "$HOME/.config/romarchy/current/theme"
 mkdir -p "$HOME/.config/romarchy/current/theme/backgrounds"
 echo -e "  \033[32m✓\033[0m"
 
-echo -n "  GTK, XDG and walker directories... "
-mkdir -p "$HOME/.config/gtk-3.0"
-mkdir -p "$HOME/.config/gtk-4.0"
-mkdir -p "$HOME/.config/xdg-desktop-portal"
+echo -n "  walker themes directory... "
 mkdir -p "$HOME/.config/walker/themes/current"
 echo -e "  \033[32m✓\033[0m"
 
@@ -86,6 +83,27 @@ mkdir -p "$HOME/.config/mako"
 rm -f "$HOME/.config/mako/config"
 if [[ -f "$HOME/.config/romarchy/current/theme/mako.ini" ]]; then
   ln -sf "$HOME/.config/romarchy/current/theme/mako.ini" "$HOME/.config/mako/config"
+fi
+echo -e "  \033[32m✓\033[0m"
+
+echo -n "  btop config... "
+if [[ -f "$HOME/.config/btop/btop.conf" ]]; then
+  sed -i 's/^color_theme = .*/color_theme = "current"/' "$HOME/.config/btop/btop.conf"
+else
+  mkdir -p "$HOME/.config/btop"
+  cat > "$HOME/.config/btop/btop.conf" << 'EOF'
+#? Config file for btop
+
+#* Name of a btop++/bpytop/bashtop formatted ".theme" file, "Default" and "TTY" for builtin themes.
+#* Themes should be placed in "../share/btop/themes" relative to binary or "$HOME/.config/btop/themes"
+color_theme = "current"
+
+#* If the theme set background should be shown, set to False if you want terminal background transparency.
+theme_background = True
+
+#* Sets if 24-bit truecolor should be used, will convert 24-bit colors to 256 color (6x6x6 color cube) if false.
+truecolor = True
+EOF
 fi
 echo -e "  \033[32m✓\033[0m"
 
