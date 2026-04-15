@@ -3,7 +3,3 @@
 @define-color label {{ foreground }};
 @define-color image {{ foreground }};
 @define-color progress {{ accent }};
-@define-color surface {{ surface }};
-@define-color surface0 {{ surface0 }};
-@define-color surface1 {{ surface1 }};
-@define-color surface2 {{ surface2 }};

@@ -1,143 +1,104 @@
 #!/bin/bash
 
-set -e
-
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
-THEMES_DIR="$ROMARCHY_DIR/themes"
-USER_THEMES_DIR="$HOME/.config/romarchy/themes"
 
-if [[ -z "$1" ]]; then
-    echo "Usage: theme-set <theme-name>"
-    echo ""
-    echo "Available themes:"
-    for theme_dir in "$USER_THEMES_DIR"/* "$THEMES_DIR"/*; do
-        if [[ -d "$theme_dir" ]]; then
-            basename "$theme_dir"
-        fi
-    done 2>/dev/null || true
-    exit 1
+if [[ -z $1 ]]; then
+  echo "Usage: theme-set <theme-name>"
+  exit 1
 fi
 
-THEME_NAME="$1"
+CURRENT_THEME_PATH="$HOME/.config/romarchy/current/theme"
+NEXT_THEME_PATH="$HOME/.config/romarchy/current/next-theme"
+USER_THEMES_PATH="$HOME/.config/romarchy/themes"
+ROMARCHY_THEMES_PATH="$ROMARCHY_PATH/themes"
 
-if [[ -d "$USER_THEMES_DIR/$THEME_NAME" ]]; then
-    THEME_PATH="$USER_THEMES_DIR/$THEME_NAME"
-elif [[ -d "$THEMES_DIR/$THEME_NAME" ]]; then
-    THEME_PATH="$THEMES_DIR/$THEME_NAME"
-else
-    echo "Theme '$THEME_NAME' does not exist"
-    exit 1
+THEME_NAME=$(echo "$1" | sed -E 's/<[^>]+>//g' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+
+if [[ ! -d $ROMARCHY_THEMES_PATH/$THEME_NAME ]] && [[ ! -d $USER_THEMES_PATH/$THEME_NAME ]]; then
+  echo "Theme '$THEME_NAME' does not exist"
+  exit 1
 fi
 
-echo "Setting theme to: $THEME_NAME"
+rm -rf "$NEXT_THEME_PATH"
+mkdir -p "$NEXT_THEME_PATH"
 
-echo "$THEME_NAME" > "$ROMARCHY_DIR/.current-theme"
+cp -r "$ROMARCHY_THEMES_PATH/$THEME_NAME/"* "$NEXT_THEME_PATH/" 2>/dev/null
+cp -r "$USER_THEMES_PATH/$THEME_NAME/"* "$NEXT_THEME_PATH/" 2>/dev/null
 
-apply_theme() {
-    local theme_path="$1"
-    local theme_name=$(basename "$theme_path")
-    local theme_dir="$THEMES_DIR/$theme_name"
-
-    # Use user theme directory if it exists, otherwise official
-    if [[ -d "$USER_THEMES_DIR/$theme_name" ]]; then
-        theme_dir="$USER_THEMES_DIR/$theme_name"
-    fi
-
-    # Copy static theme files (these override defaults)
-    if [[ -f "$theme_path/hyprland.conf" ]]; then
-        ln -sf "$theme_path/hyprland.conf" "$ROMARCHY_DIR/config/hypr/theme.conf"
-    fi
-
-    if [[ -f "$theme_path/kitty.conf" ]]; then
-        ln -sf "$theme_path/kitty.conf" "$ROMARCHY_DIR/config/kitty/theme.conf"
-    fi
-
-    # Do NOT overwrite waybar.css - user's custom file should @import the generated theme
-    if [[ -d "$theme_path/walker" ]]; then
-        # Copy walker theme files
-        local walker_theme_dir="$HOME/.config/walker/themes/current"
-        mkdir -p "$walker_theme_dir"
-        rm -f "$walker_theme_dir"/*
-        cp "$theme_path/walker/"* "$walker_theme_dir/" 2>/dev/null || true
-    fi
-
-    if [[ -f "$theme_path/nvim.lua" ]]; then
-        mkdir -p "$HOME/.config/nvim/lua/plugins"
-        rm -f "$HOME/.config/nvim/lua/plugins/theme.lua"
-        ln -sf "$theme_path/nvim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
-    fi
-
-    if [[ -f "$theme_path/vscode.json" ]]; then
-        mkdir -p "$ROMARCHY_DIR/.local/share/romarchy/themes/current"
-        rm -f "$ROMARCHY_DIR/.local/share/romarchy/themes/current/vscode.json"
-        ln -sf "$theme_path/vscode.json" "$ROMARCHY_DIR/.local/share/romarchy/themes/current/vscode.json" 2>/dev/null || cp "$theme_path/vscode.json" "$ROMARCHY_DIR/.vscode-theme.json" 2>/dev/null || true
-    fi
-
-    if [[ -f "$theme_path/mako.ini" ]]; then
-        ln -sf "$theme_path/mako.ini" "$HOME/.config/mako/theme.ini"
-    fi
-
-    # Generate dynamic configs from templates (only for files not already in theme folder)
-    if [[ -f "$theme_dir/colors.toml" ]] && [[ -x "$ROMARCHY_DIR/bin/theme-set-templates" ]]; then
-        "$ROMARCHY_DIR/bin/theme-set-templates" "$theme_name"
-        # Copy generated walker.css to walker's current theme directory
-        if [[ -f "$HOME/.config/romarchy/current/theme/walker.css" ]]; then
-            mkdir -p "$HOME/.config/walker/themes/current"
-            cp "$HOME/.config/romarchy/current/theme/walker.css" "$HOME/.config/walker/themes/current/style.css"
-        fi
-        if [[ -f "$HOME/.config/btop/btop.conf" ]]; then
-            sed -i "s/^color_theme = .*/color_theme = \"$theme_name\"/" "$HOME/.config/btop/btop.conf"
-        fi
-    fi
-}
-
-apply_theme "$THEME_PATH"
-
-# Set wallpaper from theme backgrounds
-if [[ -d "$THEME_PATH/backgrounds" ]]; then
-    rm -rf "$HOME/.config/romarchy/current/theme/backgrounds"
-    mkdir -p "$HOME/.config/romarchy/current/theme/backgrounds"
-    cp "$THEME_PATH/backgrounds/"* "$HOME/.config/romarchy/current/theme/backgrounds/" 2>/dev/null || true
-    THEME_BG="$HOME/.config/romarchy/current/theme/backgrounds"
-    if [[ -d "$THEME_BG" ]] && [[ -n "$(ls -A $THEME_BG 2>/dev/null)" ]]; then
-        FIRST_BG=$(ls "$THEME_BG" | head -1)
-        pkill -x swaybg 2>/dev/null || true
-        setsid uwsm-app -- swaybg -i "$THEME_BG/$FIRST_BG" -m fill >/dev/null 2>&1 &
-    fi
+if [[ -x "$ROMARCHY_DIR/bin/theme-set-templates" ]]; then
+  "$ROMARCHY_DIR/bin/theme-set-templates" "$THEME_NAME"
 fi
 
-# Restart apps to apply new theme
+rm -rf "$CURRENT_THEME_PATH"
+mv "$NEXT_THEME_PATH" "$CURRENT_THEME_PATH"
+
+echo "$THEME_NAME" >"$ROMARCHY_DIR/.current-theme"
+
+# Copy walker theme
+if [[ -f "$CURRENT_THEME_PATH/walker.css" ]]; then
+  mkdir -p "$HOME/.config/walker/themes/current"
+  cp "$CURRENT_THEME_PATH/walker.css" "$HOME/.config/walker/themes/current/style.css"
+fi
+
+# Link btop current theme
+if [[ -f "$CURRENT_THEME_PATH/btop.theme" ]]; then
+  mkdir -p "$HOME/.config/btop/themes"
+  ln -sf "$CURRENT_THEME_PATH/btop.theme" "$HOME/.config/btop/themes/current.theme"
+fi
+
+# Link mako config (remove old first, then create new only if theme has it)
+rm -f "$HOME/.config/mako/config"
+if [[ -f "$CURRENT_THEME_PATH/mako.ini" ]]; then
+  mkdir -p "$HOME/.config/mako"
+  ln -sf "$CURRENT_THEME_PATH/mako.ini" "$HOME/.config/mako/config"
+fi
+
+if [[ -d "$CURRENT_THEME_PATH/backgrounds" ]]; then
+  FIRST_BG=$(ls "$CURRENT_THEME_PATH/backgrounds" | head -1)
+  if [[ -n "$FIRST_BG" ]]; then
+    ln -nsf "$CURRENT_THEME_PATH/backgrounds/$FIRST_BG" "$HOME/.config/romarchy/current/background"
+    pkill -x swaybg 2>/dev/null || true
+    setsid uwsm-app -- swaybg -i "$CURRENT_THEME_PATH/backgrounds/$FIRST_BG" -m fill >/dev/null 2>&1 &
+  fi
+fi
+
 hyprctl reload 2>/dev/null || true
 
-# Restart waybar - like omarchy: kill and restart via uwsm
-pkill -x waybar && setsid uwsm-app -- waybar >/dev/null 2>&1 &
+if pgrep -x waybar >/dev/null; then
+  pkill -x waybar && setsid uwsm-app -- waybar >/dev/null 2>&1 &
+fi
 
-# Restart walker - like omarchy: kill and restart via uwsm
-pkill -x walker && setsid uwsm-app -- walker >/dev/null 2>&1 &
+if pgrep -x swayosd-server >/dev/null; then
+  pkill -x swayosd-server && setsid uwsm-app -- swayosd-server >/dev/null 2>&1 &
+fi
 
-# Restart swayosd - like omarchy: kill and restart via uwsm
-pkill -x swayosd-server && setsid uwsm-app -- swayosd-server >/dev/null 2>&1 &
-
-if pgrep -x btop > /dev/null; then
-    pkill -SIGUSR2 btop 2>/dev/null || true
+if pgrep -x btop >/dev/null; then
+  pkill -SIGUSR2 btop 2>/dev/null || true
 fi
 
 if command -v makoctl &> /dev/null; then
-    makoctl reload 2>/dev/null || true
+  makoctl reload 2>/dev/null || true
 fi
 
-# Restart terminals to apply new theme
 if pgrep -x kitty >/dev/null; then
-    killall -SIGUSR1 kitty >/dev/null
+  killall -SIGUSR1 kitty >/dev/null
 fi
 
-if pgrep -x alacritty >/dev/null; then
-    killall -SIGUSR1 alacritty >/dev/null
+# Apply app-specific themes
+if [[ -x "$ROMARCHY_DIR/bin/theme-set-gnome" ]]; then
+  theme-set-gnome
 fi
 
-if pgrep -x ghostty >/dev/null; then
-    killall -SIGUSR2 ghostty >/dev/null
+if [[ -x "$ROMARCHY_DIR/bin/theme-set-vscode" ]]; then
+  theme-set-vscode
+fi
+if [[ -x "$ROMARCHY_DIR/bin/theme-set-obsidian" ]]; then
+  theme-set-obsidian
 fi
 
-echo "ok"
+# Run hook
+if [[ -x "$ROMARCHY_DIR/bin/hook" ]]; then
+  hook theme-set "$THEME_NAME"
+fi
+
 echo "Theme '$THEME_NAME' applied!"

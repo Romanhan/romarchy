@@ -14,7 +14,7 @@ start_walker_service
 CHOICE=$(find "$DESKTOP_DIR" -maxdepth 1 -name "*.desktop" -exec basename {} .desktop \; 2>/dev/null | \
     grep -E "^(Grok|Gemini|ChatGPT|Claude)" | \
     sort | \
-    walker --dmenu -p "AI" --width 295 --minheight 1 --maxheight 300 2>/dev/null)
+    walker --dmenu -p "AI" --width 250 --minheight 1 --maxheight 300 2>/dev/null)
 
 if [[ -z "$CHOICE" ]]; then
     exit 0

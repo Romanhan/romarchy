@@ -67,8 +67,13 @@ system_menu() {
 
 style_menu() {
     echo -e "󰸌  Themes
-  󰏚  Backgrounds
-    Fonts"
+   󰏚  Backgrounds
+     Fonts"
+}
+
+update_menu() {
+    echo -e "󰚕  Update System
+   󰣇  Update Romarchy"
 }
 
 webapps_menu() {
@@ -118,16 +123,19 @@ run_action() {
             hyprctl dispatch exec "kitty -e nvim ~/.local/share/romarchy/config/hypr/input.conf"
             ;;
         *"Themes")
-            "$ROMARCHY_DIR/bin/theme-current"
+            launch-walker -m menus:romarchythemes --width 800 --minheight 400
             ;;
         *"Backgrounds")
-            "$ROMARCHY_DIR/bin/bg-install"
+            launch-walker -m menus:romarchyBackgroundSelector --width 800 --minheight 400
             ;;
         *"Fonts")
             show_font_menu
             ;;
-        *"Update")
-            uwsm-app -- kitty --class RomarchyUpdate -e system-update
+        *"Update System")
+            launch-floating-terminal system-update-perform
+            ;;
+        *"Update Romarchy")
+            launch-floating-terminal system-update-git
             ;;
         *"Install Web App")
             uwsm-app -- kitty -e "$ROMARCHY_DIR/bin/webapp-install"
@@ -178,6 +186,15 @@ show_webapps_menu() {
     fi
 }
 
+show_update_menu() {
+    local choice=$(menu "Update" "$(update_menu)")
+    if [[ -z "$choice" ]]; then
+        back_to show_main_menu
+    else
+        run_action "$choice"
+    fi
+}
+
 show_main_menu() {
     start_walker_service
     local choice
@@ -190,6 +207,7 @@ show_main_menu() {
         *System) show_system_menu ;;
         *Style) show_style_menu ;;
         *Power*) show_power_menu ;;
+        *Update*) show_update_menu ;;
         *) run_action "$choice" ;;
     esac
 }
@@ -201,7 +219,7 @@ go_to_menu() {
     *style*) show_style_menu ;;
     *power*) show_power_menu ;;
     *webapps*) show_webapps_menu ;;
-    *update*) run_action "Update" ;;
+    *update*) show_update_menu ;;
     *) show_main_menu ;;
     esac
 }

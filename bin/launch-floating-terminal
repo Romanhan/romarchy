@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Launch a floating terminal, execute the command passed in, and finally end with the show-done presentation.
+# Used by actions such as Update System.
+
+cmd="$*"
+exec setsid uwsm-app -- xdg-terminal-exec --app-id=org.romarchy.terminal --title=Romarchy -e bash -c "$cmd; if (( \$? != 130 )); then show-done; fi"

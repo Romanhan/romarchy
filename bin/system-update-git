@@ -8,7 +8,7 @@ system-update-time
 
 hyprctl keyword debug:suppress_errors true &>/dev/null || true
 
-git -C $ROMARCHY_DIR pull --autostash
-git -C $ROMARCHY_DIR --no-pager diff --check || git -C $ROMARCHY_DIR reset --merge
+git -C $ROMARCHY_PATH pull --autostash
+git -C $ROMARCHY_PATH --no-pager diff --check || git -C $ROMARCHY_PATH reset --merge
 
 hyprctl reload &>/dev/null || true

@@ -11,7 +11,7 @@ fi
 
 THEME_DIR="$ROMARCHY_DIR/themes/$THEME_NAME"
 COLORS_FILE="$THEME_DIR/colors.toml"
-CURRENT_THEME_DIR="$HOME/.config/romarchy/current/theme"
+CURRENT_THEME_DIR="$HOME/.config/romarchy/current/next-theme"
 
 hex_to_rgb() {
     local hex="${1#\#}"
@@ -59,7 +59,7 @@ for tpl in "$TEMPLATES_DIR"/*.tpl; do
             echo "Generated: $output_file"
             ;;
         mako.ini)
-            output_file="$HOME/.config/mako/theme.ini"
+            output_file="$CURRENT_THEME_DIR/mako.ini"
             sed -f "$sed_script" "$tpl" > "$output_file"
             echo "Generated: $output_file"
             ;;
@@ -85,6 +85,14 @@ for tpl in "$TEMPLATES_DIR"/*.tpl; do
             ;;
         walker.css)
             output_file="$CURRENT_THEME_DIR/walker.css"
+            sed -f "$sed_script" "$tpl" > "$output_file"
+            echo "Generated: $output_file"
+            # Also copy to walker current theme
+            mkdir -p "$HOME/.config/walker/themes/current"
+            cp "$output_file" "$HOME/.config/walker/themes/current/style.css"
+            ;;
+        ghostty.conf)
+            output_file="$HOME/.config/ghostty/theme.conf"
             sed -f "$sed_script" "$tpl" > "$output_file"
             echo "Generated: $output_file"
             ;;

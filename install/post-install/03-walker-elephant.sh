@@ -34,6 +34,7 @@ fi
 
 # Link the elephant menu scripts
 mkdir -p ~/.config/elephant/menus
+ln -snf "$ROMARCHY_DIR/config/elephant/menus/romarchy_themes.lua" ~/.config/elephant/menus/romarchy_themes.lua
 ln -snf "$ROMARCHY_DIR/config/elephant/menus/romarchy_background_selector.lua" ~/.config/elephant/menus/romarchy_background_selector.lua
 echo -e "  \033[32m✓\033[0m Elephant menus linked"
 

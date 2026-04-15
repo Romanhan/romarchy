@@ -23,4 +23,7 @@ check_and_install "Utils" \
   resvg \
   imagemagick \
   trash-cli \
-  gum
+  gum \
+  adw-gtk-theme \
+  yaru-icon-theme \
+  btop

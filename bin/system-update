@@ -24,5 +24,4 @@ if ! gum confirm "Continue with update?"; then
   exit 0
 fi
 
-system-update-git
 system-update-perform

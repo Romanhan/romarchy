@@ -34,12 +34,13 @@ git clone https://github.com/Romanhan/romarchy.git ~/.local/share/romarchy
 ## Features
 
 - **Snapshots**: `snapshot create/list/restore`
-- **Themes**: Catppuccin Mocha (dark)
+- **Themes**: Multiple themes with automatic switching
 - **Bootloader**: Limine with direct UKI boot
 - **Encryption**: LUKS with Plymouth password dialog
 - **Shell**: Kitty + Starship prompt
 - **WiFi**: iwd + NetworkManager (Qualcomm Atheros support)
 - **Hardware Detection**: Automatic detection for ASUS ROG, Framework, Surface, Intel, Vulkan
+- **GTK/Icon Theming**: Full GTK3/GTK4 theming with adw-gtk-theme and Yaru icons
 
 ## Structure
 
@@ -155,6 +156,62 @@ ai-install
 # Install web app manually (via menu)
 launch-menu → Web Apps → Install Web App
 ```
+
+## Theme Switching
+
+Full dynamic theme system inspired by [Omarchy](https://github.com/basecamp/omarchy):
+
+### Available Commands
+
+```bash
+# Switch theme
+theme-set <theme-name>
+
+# List available themes
+theme-list
+
+# Show current theme
+theme-current
+
+# Cycle background
+bg-next
+```
+
+### Supported Apps
+
+| App | Theme Method |
+|-----|-------------|
+| **Waybar** | Updates style.css from theme |
+| **GTK3/GTK4** | Generates gtk.css + settings.ini |
+| **Nautilus** | GTK theming + restart |
+| **Mako** | Symlinks mako.ini |
+| **Walker** | Copies walker.css |
+| **btop** | Symlinks btop.theme |
+| **SwayOSD** | Generates theme.css |
+| **Hyprlock** | Generates theme.conf |
+| **Kitty** | Generates theme.conf |
+| **Background** | Updates swaybg with theme background |
+
+### Supported Themes
+
+Comes with 20+ themes including:
+- catppuccin-mocha-black (default)
+- osaka-jade
+- tokyo-night
+- nord
+- nordic
+- gruvbox
+- everforest
+- rossa
+- and more...
+
+### GTK Theming
+
+If packages are installed (adw-gtk-theme, yaru-icon-theme), theme-switching also updates:
+- GTK3/GTK4 CSS theming
+- Icon theme (Yaru variants)
+- Cursor theme
+- XDG desktop portal config
 
 ## Inspired by
 

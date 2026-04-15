@@ -52,13 +52,13 @@
     "format": "<span font='omarchy'>\udb82\udcc7</span>",
     "tooltip": false
   },
- "custom/updates": {
+  "custom/updates": {
     "format": "{}",
-    "exec": "$ROMARCHY_PATH/bin/update",
-    "on-click": "$ROMARCHY_PATH/bin/system-update",
+    "exec": "update",
+    "on-click": "launch-floating-terminal system-update-perform; pkill -RTMIN+7 waybar",
     "tooltip-format": "System updates available",
     "interval": 3600,
-    "signal": 8
+    "signal": 7
   },
   "cpu": {
     "interval": 5,

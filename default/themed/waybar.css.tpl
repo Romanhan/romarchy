@@ -1,10 +1,2 @@
 @define-color foreground {{ foreground }};
 @define-color background {{ background }};
-@define-color accent {{ accent }};
-@define-color surface {{ surface }};
-@define-color surface0 {{ surface0 }};
-@define-color surface1 {{ surface1 }};
-@define-color surface2 {{ surface2 }};
-@define-color text {{ foreground }};
-@define-color text-muted {{ foreground-muted }};
-@define-color border {{ surface2 }};

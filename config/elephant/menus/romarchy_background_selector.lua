@@ -25,9 +25,10 @@ end
 function GetEntries()
   local entries = {}
   local home = os.getenv("HOME")
+  local romarchy_path = os.getenv("ROMARCHY_PATH") or (home .. "/.local/share/romarchy")
 
   -- Read current theme name
-  local theme_name_file = io.open(home .. "/.local/share/romarchy/.current-theme", "r")
+  local theme_name_file = io.open(romarchy_path .. "/.current-theme", "r")
   local theme_name = theme_name_file and theme_name_file:read("*l") or nil
   if theme_name_file then
     theme_name_file:close()

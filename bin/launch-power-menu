@@ -11,7 +11,7 @@ start_walker_service() {
 
 start_walker_service
 
-CHOICE=$(echo -e "󰐥  Shutdown\n󰜉  Reboot\n󰍃  Logout\n⏾  Suspend\n󰌾  Lock" | walker --dmenu -p "Power" --width 295 --minheight 1 --maxheight 300)
+CHOICE=$(echo -e "󰐥  Shutdown\n󰜉  Reboot\n󰍃  Logout\n󰒲  Suspend\n󰌾  Lock" | walker --dmenu -p "Power" --width 250 --minheight 1 --maxheight 300)
 
 case "$CHOICE" in
   *"Shutdown"*) "$ROMARCHY_DIR/bin/system-shutdown" ;;

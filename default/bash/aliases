@@ -7,9 +7,10 @@ alias cat='bat'
 # eza - modern ls replacement
 if command -v eza &> /dev/null; then
     alias ls='eza -lh --group-directories-first --icons=auto'
-    alias ll='eza -la --group-directories-first --icons=auto'
     alias la='eza -a --group-directories-first --icons=auto'
+    alias lsa='ls -a'
     alias lt='eza --tree --level=2 --icons'
+    alias lta='lt -a'
 fi
 
 # Git
