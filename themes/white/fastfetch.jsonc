@@ -1,0 +1,109 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "small",
+    "padding": {
+      "top": 1,
+      "bottom": 0,
+      "left": 1,
+      "right": 1
+    },
+    "color": {
+      "1": "#6e6e6e"
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "color": {
+      "keys": "#6e6e6e",
+      "title": "#6e6e6e"
+    },
+    "key": {
+      "width": 16,
+      "type": "string"
+    }
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "format": "{#keys}╭────────────╮"
+    },
+    {
+      "type": "os",
+      "key": "│  OS       │"
+    },
+    {
+      "type": "kernel",
+      "key": "│  Kernel   │"
+    },
+    {
+      "type": "host",
+      "key": "│  Host     │"
+    },
+    {
+      "type": "cpu",
+      "key": "│  CPU      │"
+    },
+    {
+      "type": "gpu",
+      "key": "│  GPU      │"
+    },
+    {
+      "type": "display",
+      "key": "│ 󱄄 Display  │"
+    },
+    {
+      "type": "wm",
+      "key": "│  WM       │"
+    },
+    {
+      "type": "shell",
+      "key": "│  Shell    │"
+    },
+    {
+      "type": "terminal",
+      "key": "│  Terminal │"
+    },
+    {
+      "type": "packages",
+      "key": "│ 󰏖 Packages │"
+    },
+    {
+      "type": "memory",
+      "key": "│  Memory   │"
+    },
+    {
+      "type": "disk",
+      "key": "│ 󰋊 Disk     │"
+    },
+    {
+      "type": "command",
+      "key": "│ 󱦟 OS Age   │",
+      "text": "echo $(( ($(date +%s) - $(stat -c %W /)) / 86400 )) days"
+    },
+    {
+      "type": "colors",
+      "key": "│ 󰸌 Colors   │",
+      "symbol": "circle"
+    },
+    {
+      "type": "custom",
+      "format": "{#keys}╰────────────╯"
+    }
+  ],
+  "colors": {
+    "enabled": true,
+    "bold": true,
+    "valuesWithColor": true,
+    "palette": [
+      "#ffffff",
+      "#2a2a2a",
+      "#3a3a3a",
+      "#4a4a4a",
+      "#1a1a1a",
+      "#2e2e2e",
+      "#3e3e3e",
+      "#000000"
+    ]
+  }
+}

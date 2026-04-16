@@ -90,6 +90,11 @@ if [[ -f "$CURRENT_THEME_PATH/nvim.lua" ]]; then
   cp "$CURRENT_THEME_PATH/nvim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
 fi
 
+# Copy fastfetch config
+if [[ -f "$CURRENT_THEME_PATH/fastfetch.jsonc" ]]; then
+  cp "$CURRENT_THEME_PATH/fastfetch.jsonc" "$HOME/.config/fastfetch/config.jsonc"
+fi
+
 # Restart opencode
 if [[ -x "$ROMARCHY_DIR/bin/theme-set-opencode" ]]; then
   theme-set-opencode
