@@ -76,7 +76,7 @@ if pgrep -x btop >/dev/null; then
   pkill -SIGUSR2 btop 2>/dev/null || true
 fi
 
-if command -v makoctl &> /dev/null; then
+if cmd-present makoctl; then
   makoctl reload 2>/dev/null || true
 fi
 
