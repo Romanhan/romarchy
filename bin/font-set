@@ -98,12 +98,12 @@ EOF
 apply_gsettings() {
     local font_name="$1"
     
-    if command -v gsettings &>/dev/null; then
+    if cmd-present gsettings; then
         gsettings set org.gnome.desktop.interface font-name "$font_name" 2>/dev/null || true
         gsettings set org.gnome.desktop.interface monospace-font-name "$font_name" 2>/dev/null || true
     fi
     
-    if command -v xsettingsd &>/dev/null; then
+    if cmd-present xsettingsd; then
         pkill xsettingsd 2>/dev/null || true
         nohup xsettingsd >/dev/null 2>&1 &
     fi
