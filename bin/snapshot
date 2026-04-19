@@ -10,7 +10,7 @@ if [[ -z $COMMAND ]]; then
   exit 1
 fi
 
-if ! command -v snapper &>/dev/null; then
+if cmd-missing snapper; then
   exit 127 # romarchy-install can use this to just ignore if snapper is not available
 fi
 
