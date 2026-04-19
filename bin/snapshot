@@ -6,7 +6,7 @@ COMMAND="$1"
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 
 if [[ -z $COMMAND ]]; then
-  echo "Usage: snapshot {create|list|restore}" >&2
+  echo "Usage: snapshot {create|restore}" >&2
   exit 1
 fi
 
@@ -28,13 +28,10 @@ create)
   done
   echo
   ;;
-list)
-  snapper -c root list
-  ;;
 restore)
   sudo limine-snapper-restore
   ;;
 *)
-  echo "Usage: snapshot {create|list|restore} [description]" >&2
+  echo "Usage: snapshot {create|restore} [description]" >&2
   ;;
 esac
