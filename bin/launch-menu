@@ -46,9 +46,9 @@ main_menu() {
     echo -e "󰀻  Apps
 󱐋  System
   Style
-󰣇  Update
-󰐥  Power
-󰰘  Web Apps"
+  Update
+󰖟  Web Apps
+󰐥  Power"
 }
 
 power_menu() {
@@ -73,12 +73,12 @@ style_menu() {
 
 update_menu() {
     echo -e "󰚕  Update System
-   󰣇  Update Romarchy"
+    󰣇  Update Romarchy"
 }
 
 webapps_menu() {
-    echo -e "󰰘  Install Web App
-󰵮  Remove Web App"
+    echo -e "󰀳  Install Web App
+󰪎  Remove Web App"
 }
 
 show_font_menu() {

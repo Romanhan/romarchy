@@ -5,7 +5,7 @@
 * {
   font-family: 'CaskaydiaCove Nerd Font', 'CaskaydiaMono Nerd Font', monospace;
   font-size: 16px;
-  color: #d4be98;
+  color: #ddf7ff;
 }
 
 scrollbar {
@@ -21,9 +21,9 @@ scrollbar {
 }
 
 .box-wrapper {
-  background: #282828;
+  background: #0B0C16;
   padding: 20px;
-  border: 2px solid #7daea3;
+  border: 2px solid #82FB9C;
   border-radius: 12px;
 }
 
@@ -34,7 +34,7 @@ scrollbar {
 }
 
 .search-container {
-  background: #282828;
+  background: #0B0C16;
   padding: 10px;
 }
 
@@ -76,7 +76,7 @@ child:selected .item-box {
 }
 
 child:selected .item-box * {
-  color: #7daea3;
+  color: #82FB9C;
   font-weight: bold;
 }
 
@@ -109,7 +109,7 @@ child:selected .item-box * {
 }
 
 .keybind-hints {
-  background: #282828;
+  background: #0B0C16;
   padding: 10px;
   margin-top: 10px;
 }
