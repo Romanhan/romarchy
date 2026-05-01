@@ -1,9 +1,10 @@
 #!/bin/bash
-
-# Returns true if all of the named packages are installed on the system (or false if any of them are missing).
+# Returns true (exit 0) if ALL packages are installed
+# No romarchy- prefix per naming convention
 
 for pkg in "$@"; do
-  pacman -Q "$pkg" &>/dev/null || exit 1
+  if ! pacman -Q "$pkg" &>/dev/null && ! (command -v yay &>/dev/null && yay -Q "$pkg" &>/dev/null); then
+    exit 1
+  fi
 done
-
 exit 0

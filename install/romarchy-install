@@ -29,7 +29,7 @@ echo "" >> "$ROMARCHY_INSTALL_LOG_FILE"
 # Run installation stages (Omarchy-style)
 source "$ROMARCHY_INSTALL/helpers/all.sh"
 source "$ROMARCHY_INSTALL/preflight/all.sh"
-source "$ROMARCHY_INSTALL/packs/all.sh"
+source "$ROMARCHY_INSTALL/packaging/all.sh"
 source "$ROMARCHY_INSTALL/config/all.sh"
 source "$ROMARCHY_INSTALL/login/all.sh"
 source "$ROMARCHY_INSTALL/post-install/all.sh"

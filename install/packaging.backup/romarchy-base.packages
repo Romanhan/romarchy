@@ -1,0 +1,86 @@
+# Romarchy base package list (Omarchy pattern)
+# Installed via install/packaging/base.sh
+
+# Core Hyprland
+hyprland
+waybar
+hyprlock
+hypridle
+hyprpicker
+hyprsunset
+uwsm
+swayosd
+swaybg
+pipewire
+pipewire-alsa
+pipewire-pulse
+wireplumber
+xdg-terminal-exec
+pacman-contrib
+
+# Terminal & CLI (eza replaces tree)
+kitty
+starship
+eza
+bat
+fd
+ripgrep
+less
+bash-completion
+fzf
+zoxide
+
+# Launchers
+walker-bin
+elephant
+elephant-menus
+impala
+localsend-bin
+
+# Browser & File Manager
+brave-bin
+nautilus
+
+# Dev
+git
+neovim
+
+# Utils (yazi deps)
+wl-clipboard
+grim
+slurp
+mako
+brightnessctl
+pamixer
+playerctl
+bluetui
+yazi
+ffmpeg
+p7zip
+jq
+poppler
+resvg
+imagemagick
+trash-cli
+gum
+yaru-icon-theme
+xdg-desktop-portal-gtk
+xdg-desktop-portal-hyprland
+btop
+
+# Fonts
+ttf-cascadia-code-nerd
+ttf-jetbrains-mono-nerd
+
+# Extras
+noto-fonts-emoji
+fastfetch
+
+# Screenshot
+satty
+imv
+
+# From Omarchy (better alternatives)
+dust
+tldr
+mpv

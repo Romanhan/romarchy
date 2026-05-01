@@ -1,23 +1,24 @@
 #!/bin/bash
-
+# Run all config scripts (Omarchy pattern: explicit calls)
 ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
 source "$ROMARCHY_DIR/install/helpers/ui.sh"
 
-header "Copying Romarchy configs"
+# Base config copy (Omarchy pattern)
+run_logged "$ROMARCHY_DIR/install/config/config.sh"
 
-mkdir -p ~/.config
-cp -R "$ROMARCHY_DIR/config/"* ~/.config/
+# Theme setup
+run_logged "$ROMARCHY_DIR/install/config/theme.sh"
 
-for script in "$ROMARCHY_DIR/install/config/"*.sh; do
-  if [[ -f "$script" && "$(basename "$script")" != "all.sh" ]]; then
-    bash "$script"
-  fi
-done
+# Optional configs (uncomment as needed)
+# run_logged "$ROMARCHY_DIR/install/config/git.sh"
+# run_logged "$ROMARCHY_DIR/install/config/gpg.sh"
+# run_logged "$ROMARCHY_DIR/install/config/user-dirs.sh"
 
-for script in "$ROMARCHY_DIR/install/config/hardware/"*.sh; do
-  if [[ -f "$script" ]]; then
-    bash "$script"
-  fi
-done
+# Hardware configs
+if [[ -d $ROMARCHY_DIR/install/config/hardware ]]; then
+  for script in "$ROMARCHY_DIR/install/config/hardware/"*.sh; do
+    [[ -f "$script" ]] && run_logged "$script"
+  done
+fi
 
-success "Configs copied"
+success "All configs applied"

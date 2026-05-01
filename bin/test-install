@@ -1,0 +1,78 @@
+#!/bin/bash
+# Test Romarchy install setup (dry run)
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo " Romarchy Install Test (Dry Run)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# Test 1: Syntax check all scripts
+echo "1. Syntax Check..."
+errors=0
+for script in \
+  ~/.local/share/romarchy/install/romarchy-install \
+  ~/.local/share/romarchy/install/helpers/logging.sh \
+  ~/.local/share/romarchy/install/packaging/base.sh \
+  ~/.local/share/romarchy/install/packaging/optional.sh \
+  ~/.local/share/romarchy/install/packaging/all.sh \
+  ~/.local/share/romarchy/install/config/all.sh \
+  ~/.local/share/romarchy/install/post-install/all.sh \
+  ~/.local/share/romarchy/bin/pkg-add \
+  ~/.local/share/romarchy/bin/cmd-screenshot; do
+  
+  if bash -n "$script" 2>/dev/null; then
+    echo "  ✓ $(basename $script)"
+  else
+    echo "  ✗ $(basename $script) - SYNTAX ERROR"
+    ((errors++))
+  fi
+done
+
+# Test 2: Check file structure
+echo ""
+echo "2. File Structure..."
+files=(
+  "~/.local/share/romarchy/install/packaging/romarchy-base.packages"
+  "~/.local/share/romarchy/install/packaging/all.sh"
+  "~/.local/share/romarchy/install/config/config.sh"
+  "~/.local/share/romarchy/bin/cmd-screenshot"
+  "~/.local/share/romarchy/bin/pkg-add"
+)
+
+for f in "${files[@]}"; do
+  expanded=$(eval echo "$f")
+  if [[ -f $expanded ]]; then
+    echo "  ✓ $f"
+  else
+    echo "  ✗ $f - MISSING"
+    ((errors++))
+  fi
+done
+
+# Test 3: Check package list
+echo ""
+echo "3. Package List..."
+pkg_count=$(grep -v '^#' ~/.local/share/romarchy/install/packaging/romarchy-base.packages | grep -v '^$' | wc -l)
+echo "  Total packages: $pkg_count"
+
+# Test 4: Check cmd-screenshot
+echo ""
+echo "4. cmd-screenshot..."
+if [[ -x ~/.local/share/romarchy/bin/cmd-screenshot ]]; then
+  echo "  ✓ cmd-screenshot is executable"
+else
+  echo "  ✗ cmd-screenshot not executable"
+  ((errors++))
+fi
+
+# Summary
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [[ $errors -eq 0 ]]; then
+  echo " ✓ All tests passed! Ready to install."
+  echo ""
+  echo "Run: ~/.local/share/romarchy/install/romarchy-install"
+else
+  echo " ✗ $errors test(s) failed. Fix issues before installing."
+fi
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
