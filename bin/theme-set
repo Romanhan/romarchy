@@ -1,7 +1,5 @@
 #!/bin/bash
 
-ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
-
 if [[ -z $1 ]]; then
   echo "Usage: theme-set <theme-name>"
   exit 1
@@ -25,96 +23,40 @@ mkdir -p "$NEXT_THEME_PATH"
 cp -r "$ROMARCHY_THEMES_PATH/$THEME_NAME/"* "$NEXT_THEME_PATH/" 2>/dev/null
 cp -r "$USER_THEMES_PATH/$THEME_NAME/"* "$NEXT_THEME_PATH/" 2>/dev/null
 
-if [[ -x "$ROMARCHY_DIR/bin/theme-set-templates" ]]; then
-  "$ROMARCHY_DIR/bin/theme-set-templates" "$THEME_NAME"
-fi
+theme-set-templates
 
 rm -rf "$CURRENT_THEME_PATH"
 mv "$NEXT_THEME_PATH" "$CURRENT_THEME_PATH"
 
-echo "$THEME_NAME" >"$ROMARCHY_DIR/.current-theme"
+echo "$THEME_NAME" >"$HOME/.config/romarchy/current/theme.name"
 
-# Copy walker theme
-if [[ -f "$CURRENT_THEME_PATH/walker.css" ]]; then
-  mkdir -p "$HOME/.config/walker/themes/current"
-  cp "$CURRENT_THEME_PATH/walker.css" "$HOME/.config/walker/themes/current/style.css"
-fi
-
-# Link btop current theme
-if [[ -f "$CURRENT_THEME_PATH/btop.theme" ]]; then
-  mkdir -p "$HOME/.config/btop/themes"
-  ln -sf "$CURRENT_THEME_PATH/btop.theme" "$HOME/.config/btop/themes/current.theme"
-fi
-
-# Link mako config (remove old first, then create new only if theme has it)
-rm -f "$HOME/.config/mako/config"
-if [[ -f "$CURRENT_THEME_PATH/mako.ini" ]]; then
-  mkdir -p "$HOME/.config/mako"
-  ln -sf "$CURRENT_THEME_PATH/mako.ini" "$HOME/.config/mako/config"
-fi
-
-if [[ -d "$CURRENT_THEME_PATH/backgrounds" ]]; then
-  FIRST_BG=$(ls "$CURRENT_THEME_PATH/backgrounds" | head -1)
-  if [[ -n "$FIRST_BG" ]]; then
-    ln -nsf "$CURRENT_THEME_PATH/backgrounds/$FIRST_BG" "$HOME/.config/romarchy/current/background"
-    pkill -x swaybg 2>/dev/null || true
-    setsid uwsm-app -- swaybg -i "$CURRENT_THEME_PATH/backgrounds/$FIRST_BG" -m fill >/dev/null 2>&1 &
-  fi
-fi
-
-hyprctl reload 2>/dev/null || true
+theme-bg-next
 
 if pgrep -x waybar >/dev/null; then
-  pkill -x waybar && setsid uwsm-app -- waybar >/dev/null 2>&1 &
+  restart-waybar || true
+fi
+restart-swayosd || true
+restart-terminal || true
+restart-hyprctl || true
+restart-btop || true
+restart-opencode || true
+restart-mako || true
+restart-hypridle || true
+restart-walker || true
+
+# Tmux config symlink
+if [[ -f $CURRENT_THEME_PATH/tmux.conf ]]; then
+  mkdir -p ~/.config/tmux
+  ln -snf "$CURRENT_THEME_PATH/tmux.conf" ~/.config/tmux/tmux.conf
 fi
 
-if pgrep -x swayosd-server >/dev/null; then
-  pkill -x swayosd-server && setsid uwsm-app -- swayosd-server >/dev/null 2>&1 &
-fi
+# Restart tmux if running
+restart-tmux || true
 
-if pgrep -x btop >/dev/null; then
-  pkill -SIGUSR2 btop 2>/dev/null || true
-fi
+theme-set-gnome
+theme-set-vscode
+theme-set-obsidian
 
-if cmd-present makoctl; then
-  makoctl reload 2>/dev/null || true
+if hook theme-set "$THEME_NAME" 2>/dev/null; then
+  :
 fi
-
-if pgrep -x kitty >/dev/null; then
-  killall -SIGUSR1 kitty >/dev/null
-fi
-
-# Copy nvim theme (LazyVim)
-if [[ -f "$CURRENT_THEME_PATH/nvim.lua" ]]; then
-  mkdir -p "$HOME/.config/nvim/lua/plugins"
-  cp "$CURRENT_THEME_PATH/nvim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
-fi
-
-# Copy fastfetch config
-if [[ -f "$CURRENT_THEME_PATH/fastfetch.jsonc" ]]; then
-  cp "$CURRENT_THEME_PATH/fastfetch.jsonc" "$HOME/.config/fastfetch/config.jsonc"
-fi
-
-# Restart opencode
-if [[ -x "$ROMARCHY_DIR/bin/theme-set-opencode" ]]; then
-  theme-set-opencode
-fi
-
-# Apply app-specific themes
-if [[ -x "$ROMARCHY_DIR/bin/theme-set-gnome" ]]; then
-  theme-set-gnome
-fi
-
-if [[ -x "$ROMARCHY_DIR/bin/theme-set-vscode" ]]; then
-  theme-set-vscode
-fi
-if [[ -x "$ROMARCHY_DIR/bin/theme-set-obsidian" ]]; then
-  theme-set-obsidian
-fi
-
-# Run hook
-if [[ -x "$ROMARCHY_DIR/bin/hook" ]]; then
-  hook theme-set "$THEME_NAME"
-fi
-
-echo "Theme '$THEME_NAME' applied!"

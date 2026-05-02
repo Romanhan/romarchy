@@ -29,6 +29,7 @@ less
 bash-completion
 fzf
 zoxide
+tmux
 
 # Launchers
 walker-bin

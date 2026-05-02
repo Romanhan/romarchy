@@ -1,0 +1,6 @@
+#!/bin/bash
+# Restart tmux if running with the latest configuration
+
+if pgrep -x tmux >/dev/null; then
+  tmux source-file ~/.config/tmux/tmux.conf
+fi
