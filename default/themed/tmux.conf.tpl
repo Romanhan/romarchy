@@ -58,6 +58,7 @@ bind -n M-Down switch-client -n
 
 # General
 set -g default-terminal "tmux-256color"
+set -as terminal-features ",xterm-256color:RGB"
 set -ag terminal-overrides ",*:RGB"
 set -g mouse on
 set -g base-index 1
@@ -71,7 +72,7 @@ set -g allow-passthrough on
 setw -g aggressive-resize on
 set -g detach-on-destroy off
 
-# Status bar (Theme-aware)
+# Status bar
 set -g status-position top
 set -g status-interval 5
 set -g status-left-length 30
@@ -80,14 +81,15 @@ set -g window-status-separator ""
 set -gw automatic-rename on
 set -gw automatic-rename-format '#{b:pane_current_path}'
 
-# Theme colors from colors.toml
-set -g status-style "bg={{ background }},fg={{ foreground }}"
-set -g status-left "#[fg={{ background }},bg={{ accent }},bold] #S #[bg={{ background }}] "
-set -g status-right "#[fg={{ accent }}]#{?pane_in_mode,COPY ,}#{?client_prefix,PREFIX ,}#{?window_zoomed_flag,ZOOM ,}#[fg={{ foreground }}]#h "
-set -g window-status-format "#[fg={{ color8 }}] #I:#W "
-set -g window-status-current-format "#[fg={{ accent }},bold] #I:#W "
-set -g pane-border-style "fg={{ color8 }}"
-set -g pane-active-border-style "fg={{ accent }}"
-set -g message-style "bg={{ background }},fg={{ accent }}"
-set -g message-command-style "bg={{ background }},fg={{ accent }}"
-setw -g clock-mode-colour {{ accent }}
+# Theme colors (fixed color names)
+set -g status-style "bg=default,fg=default"
+set -g status-left "#[fg=black,bg=blue,bold] #S #[bg=default] "
+set -g status-right "#[fg=blue]#{?pane_in_mode,COPY ,}#{?client_prefix,PREFIX ,}#{?window_zoomed_flag,ZOOM ,}#[fg=brightblack]#h "
+set -g window-status-format "#[fg=brightblack] #I:#W "
+set -g window-status-current-format "#[fg=blue,bold] #I:#W "
+set -g pane-border-style "fg=brightblack"
+set -g pane-active-border-style "fg=blue"
+set -g message-style "bg=default,fg=blue"
+set -g message-command-style "bg=default,fg=blue"
+set -g mode-style "bg=blue,fg=black"
+setw -g clock-mode-colour blue
