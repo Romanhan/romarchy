@@ -1,3 +1,12 @@
 #!/bin/bash
+# Restart btop to reload theme config
 
-pkill -SIGUSR2 btop
+if pgrep -x btop >/dev/null; then
+  pkill -SIGUSR2 btop 2>/dev/null || true
+fi
+
+# Recreate theme symlink
+mkdir -p ~/.config/btop/themes
+if [[ -f ~/.config/romarchy/current/theme/btop.theme ]]; then
+  ln -snf ~/.config/romarchy/current/theme/btop.theme ~/.config/btop/themes/current.theme
+fi
