@@ -1,102 +1,40 @@
 #!/bin/bash
 
-ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
-TEMPLATES_DIR="$ROMARCHY_DIR/default/themed"
-THEME_NAME="$1"
-
-if [[ -z "$THEME_NAME" ]]; then
-    echo "Usage: theme-set-templates <theme-name>"
-    exit 1
-fi
-
-THEME_DIR="$ROMARCHY_DIR/themes/$THEME_NAME"
-COLORS_FILE="$THEME_DIR/colors.toml"
-CURRENT_THEME_DIR="$HOME/.config/romarchy/current/next-theme"
+TEMPLATES_DIR="$ROMARCHY_PATH/default/themed"
+USER_TEMPLATES_DIR="$HOME/.config/romarchy/themed"
+NEXT_THEME_DIR="$HOME/.config/romarchy/current/next-theme"
+COLORS_FILE="$NEXT_THEME_DIR/colors.toml"
 
 hex_to_rgb() {
-    local hex="${1#\#}"
-    printf "%d,%d,%d" "0x${hex:0:2}" "0x${hex:2:2}" "0x${hex:4:2}"
+  local hex="${1#\#}"
+  printf "%d,%d,%d" "0x${hex:0:2}" "0x${hex:2:2}" "0x${hex:4:2}"
 }
 
-if [[ ! -f "$COLORS_FILE" ]]; then
-    echo "No colors.toml found for theme: $THEME_NAME"
-    exit 1
-fi
+if [[ -f $COLORS_FILE ]]; then
+  sed_script=$(mktemp)
 
-mkdir -p "$CURRENT_THEME_DIR"
-mkdir -p "$HOME/.config/btop/themes"
-
-sed_script=$(mktemp)
-
-while IFS='=' read -r key value; do
+  while IFS='=' read -r key value; do
     key="${key//[\"\' ]/}"
     [[ $key && $key != \#* ]] || continue
     value="${value#*[\"\']}"
     value="${value%%[\"\']*}"
-    
+
     printf 's|{{ %s }}|%s|g\n' "$key" "$value"
     printf 's|{{ %s_strip }}|%s|g\n' "$key" "${value#\#}"
-    printf 's|{{ theme_name }}|%s|g\n' "$THEME_NAME"
     if [[ $value =~ ^# ]]; then
-        rgb=$(hex_to_rgb "$value")
-        echo "s|{{ ${key}_rgb }}|${rgb}|g"
+      rgb=$(hex_to_rgb "$value")
+      echo "s|{{ ${key}_rgb }}|${rgb}|g"
     fi
-done < "$COLORS_FILE" > "$sed_script"
+  done <"$COLORS_FILE" >"$sed_script"
 
-for tpl in "$TEMPLATES_DIR"/*.tpl; do
-    [[ -f "$tpl" ]] || continue
+  shopt -s nullglob
+
+  for tpl in "$USER_TEMPLATES_DIR"/*.tpl "$TEMPLATES_DIR"/*.tpl; do
     filename=$(basename "$tpl" .tpl)
-    
-    case "$filename" in
-        btop.theme)
-            output_file="$HOME/.config/btop/themes/${THEME_NAME}.theme"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-        waybar.css)
-            output_file="$CURRENT_THEME_DIR/waybar.css"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-        mako.ini)
-            output_file="$CURRENT_THEME_DIR/mako.ini"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-        swayosd.css)
-            output_file="$HOME/.config/swayosd/theme.css"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-        hyprlock.conf)
-            output_file="$HOME/.config/hyprlock/theme.conf"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-        hyprland.conf)
-            output_file="$HOME/.config/hypr/theme.conf"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-        kitty.conf)
-            output_file="$HOME/.config/kitty/theme.conf"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-        walker.css)
-            output_file="$CURRENT_THEME_DIR/walker.css"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            # Also copy to walker current theme
-            mkdir -p "$HOME/.config/walker/themes/current"
-            cp "$output_file" "$HOME/.config/walker/themes/current/style.css"
-            ;;
-        ghostty.conf)
-            output_file="$HOME/.config/ghostty/theme.conf"
-            sed -f "$sed_script" "$tpl" > "$output_file"
-            echo "Generated: $output_file"
-            ;;
-    esac
-done
+    output_path="$NEXT_THEME_DIR/$filename"
 
-rm "$sed_script"
+    sed -f "$sed_script" "$tpl" >"$output_path"
+  done
+
+  rm "$sed_script"
+fi

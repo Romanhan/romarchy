@@ -1,7 +1,7 @@
 /* Waybar Theme */
 
-@import 'font.css';
 @import '../romarchy/current/theme/waybar.css';
+@import 'font.css';
 
 * {
   background-color: @background;

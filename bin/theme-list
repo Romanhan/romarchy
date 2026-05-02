@@ -1,21 +1,8 @@
 #!/bin/bash
 
-ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
-USER_THEMES_DIR="$HOME/.config/romarchy/themes"
-OFFICIAL_THEMES_DIR="$ROMARCHY_DIR/themes"
-
-echo "Available themes:"
-
-if [[ -d "$USER_THEMES_DIR" ]]; then
-    for theme_dir in "$USER_THEMES_DIR"/*; do
-        if [[ -d "$theme_dir" ]]; then
-            echo "  $(basename "$theme_dir") (user)"
-        fi
-    done
-fi
-
-for theme_dir in "$OFFICIAL_THEMES_DIR"/*; do
-    if [[ -d "$theme_dir" ]]; then
-        echo "  $(basename "$theme_dir")"
-    fi
+{
+  find ~/.config/romarchy/themes/ -mindepth 1 -maxdepth 1 \( -type d -o -type l \) -printf '%f\n'
+  find "$ROMARCHY_PATH/themes/" -mindepth 1 -maxdepth 1 -type d -printf '%f\n'
+} | sort -u | while read -r name; do
+  echo "$name" | sed -E 's/(^|-)([a-z])/\1\u\2/g; s/-/ /g'
 done

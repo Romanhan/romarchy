@@ -1,8 +1,8 @@
 force_keyboard_focus = true
 selection_wrap = true
-theme = "current"
+theme = "romarchy-default"
+additional_theme_location = "~/.local/share/romarchy/default/walker/themes/"
 hide_action_hints = true
-rounding = 12
 
 [placeholders]
 "default" = { input = "Search...", list = "No Results" }
@@ -46,4 +46,4 @@ provider = "clipboard"
 
 [[emergencies]]
 text = "Restart Walker"
-command = "launch-walker"
+command = "restart-walker"

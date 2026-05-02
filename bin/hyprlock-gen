@@ -13,7 +13,7 @@ hex_to_rgb() {
 }
 
 generate_theme_hyprlock() {
-    local theme_name="${1:-$(cat "$ROMARCHY_DIR/.current-theme")}"
+    local theme_name="${1:-$(cat "$HOME/.config/romarchy/current/theme.name" 2>/dev/null)}"
     local theme_path="$THEME_DIR/$theme_name"
 
     if [[ ! -d "$theme_path" ]]; then

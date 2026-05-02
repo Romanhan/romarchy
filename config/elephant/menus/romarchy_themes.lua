@@ -5,7 +5,6 @@ Name = "romarchythemes"
 NamePretty = "Romarchy Themes"
 HideFromProviderlist = true
 
--- Check if file exists using Lua (no subprocess)
 local function file_exists(path)
   local f = io.open(path, "r")
   if f then
@@ -15,7 +14,6 @@ local function file_exists(path)
   return false
 end
 
--- Get first matching file from directory using ls (single call for fallback)
 local function first_image_in_dir(dir)
   local handle = io.popen("ls -1 '" .. dir .. "' 2>/dev/null | head -n 1")
   if handle then
@@ -28,7 +26,14 @@ local function first_image_in_dir(dir)
   return nil
 end
 
--- The main function elephant will call
+local function find_preview_path(dir)
+  local png = dir .. "/preview.png"
+  local jpg = dir .. "/preview.jpg"
+  if file_exists(png) then return png end
+  if file_exists(jpg) then return jpg end
+  return first_image_in_dir(dir .. "/backgrounds")
+end
+
 function GetEntries()
   local entries = {}
   local user_theme_dir = os.getenv("HOME") .. "/.config/romarchy/themes"
@@ -37,9 +42,7 @@ function GetEntries()
 
   local seen_themes = {}
 
-  -- Helper function to process themes from a directory
   local function process_themes_from_dir(theme_dir)
-    -- Single find call to get all theme directories
     local handle = io.popen("find -L '" .. theme_dir .. "' -mindepth 1 -maxdepth 1 -type d 2>/dev/null")
     if not handle then
       return
@@ -51,19 +54,8 @@ function GetEntries()
       if theme_name and not seen_themes[theme_name] then
         seen_themes[theme_name] = true
 
-        -- Check for preview images directly (no subprocess)
-        local preview_path = nil
-        local preview_png = theme_path .. "/preview.png"
-        local preview_jpg = theme_path .. "/preview.jpg"
-
-        if file_exists(preview_png) then
-          preview_path = preview_png
-        elseif file_exists(preview_jpg) then
-          preview_path = preview_jpg
-        else
-          -- Fallback: get first image from backgrounds (one ls call)
-          preview_path = first_image_in_dir(theme_path .. "/backgrounds")
-        end
+        local preview_path = find_preview_path(theme_path)
+          or find_preview_path(default_theme_dir .. "/" .. theme_name)
 
         if preview_path and preview_path ~= "" then
           local display_name = theme_name:gsub("_", " "):gsub("%-", " ")
@@ -87,9 +79,7 @@ function GetEntries()
     handle:close()
   end
 
-  -- Process user themes first (they take precedence)
   process_themes_from_dir(user_theme_dir)
-  -- Then process default themes (only if not already seen)
   process_themes_from_dir(default_theme_dir)
 
   return entries
