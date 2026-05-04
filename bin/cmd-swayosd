@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# romarchy: Wrapper for swayosd-client that targets the currently focused monitor.
+# romarchy:args=<swayosd-client-args...>
+
+exec swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')" "$@"

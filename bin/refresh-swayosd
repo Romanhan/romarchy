@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Refresh SwayOSD config and restart the service.
+# Copies defaults from romarchy to user config and restarts SwayOSD server.
+
+ROMARCHY_DIR="${ROMARCHY_DIR:-$HOME/.local/share/romarchy}"
+
+user_config_dir="${HOME}/.config/swayosd"
+default_config_dir="${ROMARCHY_DIR}/config/swayosd"
+
+mkdir -p "$user_config_dir"
+
+echo "Refreshing SwayOSD config..."
+
+cp -f "$default_config_dir/config.toml" "$user_config_dir/config.toml"
+cp -f "$default_config_dir/style.css" "$user_config_dir/style.css"
+
+restart-swayosd
+
+echo "SwayOSD config refreshed."

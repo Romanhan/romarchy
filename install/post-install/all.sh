@@ -20,10 +20,6 @@ if [[ -f $POST_INSTALL_DIR/04-boot-entries.sh ]]; then
   run_logged "$POST_INSTALL_DIR/04-boot-entries.sh"
 fi
 
-if [[ -f $POST_INSTALL_DIR/05-swayosd.sh ]]; then
-  run_logged "$POST_INSTALL_DIR/05-swayosd.sh"
-fi
-
 if [[ -f $POST_INSTALL_DIR/06-btop.sh ]]; then
   run_logged "$POST_INSTALL_DIR/06-btop.sh"
 fi

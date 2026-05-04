@@ -1,28 +1,27 @@
-@import "../swayosd/theme.css";
+@import "../romarchy/current/theme/swayosd.css";
 
-window {
-  border-radius: 8px;
+window#osd {
+  border-radius: 10px;
   opacity: 0.97;
   border: 2px solid @border-color;
-
   background-color: @background-color;
 }
 
-label {
-  font-family: 'CaskaydiaCove Nerd Font Propo', monospace;
+window#osd label {
   font-size: 11pt;
-
   color: @label;
 }
 
-image {
+window#osd image {
+  min-width: 20px;
+  min-height: 20px;
   color: @image;
 }
 
-progressbar {
+window#osd progressbar {
   border-radius: 0;
 }
 
-progress {
+window#osd progress {
   background-color: @progress;
 }
